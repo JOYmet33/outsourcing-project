@@ -16,6 +16,7 @@
     "react-dom": "^18.2.0",
     "react-kakao-maps-sdk": "^1.1.27",
     "react-router-dom": "^6.23.1",
+    "styled-components": "^6.1.11",
     "uuid": "^10.0.0",
     "zustand": "^4.5.2"
   },
