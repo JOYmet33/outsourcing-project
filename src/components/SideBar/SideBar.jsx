@@ -16,7 +16,8 @@ const sideBarComponents = {
 
 const initialState = SIDE_BAR_TABS[0];
 
-const SideBar = () => {
+const SideBar = ({ selectedSite }) => {
+  console.log(selectedSite);
   const [activeTab, setActiveTab] = useState(initialState);
   const handleTapClick = (tap) => {
     setActiveTab(tap);
@@ -26,10 +27,14 @@ const SideBar = () => {
 
   return (
     <Wrapper>
-      <CampSiteName />
-      <FirstImage />
-      <SideBarTabs onClick={handleTapClick} />
-      {ActiveComponent && <ActiveComponent />}
+      {selectedSite && (
+        <>
+          <CampSiteName name={selectedSite.facltNm} />
+          <FirstImage img={selectedSite.firstImageUrl} />
+          <SideBarTabs onClick={handleTapClick} />
+          {ActiveComponent && <ActiveComponent />}
+        </>
+      )}
     </Wrapper>
   );
 };
@@ -39,6 +44,7 @@ export default SideBar;
 const Wrapper = styled.aside`
   display: flex;
   flex-direction: column;
+  padding: 16px 8px;
   width: 450px;
   height: 100%;
 `;
