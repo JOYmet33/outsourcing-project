@@ -3,9 +3,6 @@ import axios from "axios";
 const API_KEY = import.meta.env.VITE_CAMPSITE_API_KEY;
 const BASE_URL = import.meta.env.VITE_CAMPSITE_URL;
 
-console.log("API_KEY", API_KEY);
-console.log("BASE_URL", BASE_URL);
-
 class CampsiteAPI {
   #client;
   #baseURL = BASE_URL;

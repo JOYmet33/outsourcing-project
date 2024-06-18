@@ -18,7 +18,6 @@ const sideBarComponents = {
 const initialState = SIDE_BAR_TABS[0];
 
 const SideBar = ({ selectedSite }) => {
-  console.log(selectedSite);
   const [activeTab, setActiveTab] = useState(initialState);
   const handleTapClick = (tap) => {
     setActiveTab(tap);
