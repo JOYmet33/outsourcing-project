@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import GlobalStyle from "../style/GlobalStyle";
 import HeaderLayout from "./components/layouts/HeaderLayout";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 
 const App = () => {
   return (
