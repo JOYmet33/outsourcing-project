@@ -28,7 +28,6 @@ class CampsiteAPI {
   }
 
   async getListWithLocation({ mapX, mapY }) {
-    console.log("zzz", mapX, mapY);
     const path = "/locationBasedList";
     const res = await this.#client.get(path, {
       params: {
@@ -40,6 +39,21 @@ class CampsiteAPI {
         mapX,
         mapY,
         radius: 20000,
+        _type: "json",
+      },
+    });
+    return res.data.response.body.items.item;
+  }
+  async getListWithKeyword(keyword) {
+    const path = "/searchList";
+    const res = await this.#client.get(path, {
+      params: {
+        numOfRows: 500,
+        pageNo: 1,
+        MobileOS: "ETC",
+        MobileApp: "AppTest",
+        serviceKey: API_KEY,
+        keyword,
         _type: "json",
       },
     });

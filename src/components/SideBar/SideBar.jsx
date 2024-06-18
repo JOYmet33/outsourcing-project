@@ -32,7 +32,7 @@ const SideBar = ({ selectedSite }) => {
         <CampSiteName name={selectedSite.facltNm} />
         <FirstImage img={selectedSite.firstImageUrl} />
         <SideBarTabs onClick={handleTapClick} />
-        {ActiveComponent && <ActiveComponent />}
+        {ActiveComponent && <ActiveComponent selectedSite={selectedSite} />}
       </Wrapper>
     );
 };

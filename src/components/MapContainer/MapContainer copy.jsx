@@ -3,32 +3,22 @@ import { useEffect, useState } from "react";
 import { Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
 import campsiteApi from "../../lib/api/campsite.api";
 import { Wrapper } from "./MapContainer.styled";
-import useCampsiteStore from "../../../store/campsiteStore";
 
 const API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 
 const MapContainer = ({ onClick }) => {
-  const { error: kakaoError } = useKakaoLoader({
+  const { loading: kakaoLoading, error: kakaoError } = useKakaoLoader({
     appkey: API_KEY,
   });
   const [position, setPosition] = useState({ lat: 37.5665, lng: 126.978 });
-  const keyword = useCampsiteStore((state) => state.keyword);
-  const { data, error: queryError } = useQuery({
-    queryKey: ["campingSites", { keyword }],
-    queryFn: async () => {
-      try {
-        if (keyword) {
-          const data = await campsiteApi.getListWithKeyword(keyword);
-          return data ? data : [];
-        } else {
-          const data = await campsiteApi.getListWithLocation({ mapX: position.lng, mapY: position.lat });
-          return data ? data : [];
-        }
-      } catch (e) {
-        console.error(e);
-        return [];
-      }
-    },
+
+  const {
+    data,
+    error: queryError,
+    isPending,
+  } = useQuery({
+    queryKey: ["campingSites", "location"],
+    queryFn: () => campsiteApi.getListWithLocation({ mapX: position.lng, mapY: position.lat }),
     enabled: !!position.lat && !!position.lng,
   });
 
@@ -50,6 +40,7 @@ const MapContainer = ({ onClick }) => {
     }
   }, []);
 
+  if (kakaoLoading || isPending) return <div>Loading...</div>;
   if (kakaoError || queryError) return <div>Error loading data</div>;
 
   return (
