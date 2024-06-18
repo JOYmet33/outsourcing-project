@@ -1,5 +1,9 @@
-const FirstImage = () => {
-  return <div>FirstImage</div>;
+const FirstImage = ({ img }) => {
+  return (
+    <div>
+      <img src={img} alt="" />
+    </div>
+  );
 };
 
 export default FirstImage;
