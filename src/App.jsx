@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
 import GlobalStyle from "../style/GlobalStyle";
+import HomeLayout from "./components/layouts/HomeLayout";
 
 const App = () => {
   return (
@@ -8,7 +8,7 @@ const App = () => {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomeLayout />} />
         </Routes>
       </BrowserRouter>
     </>
