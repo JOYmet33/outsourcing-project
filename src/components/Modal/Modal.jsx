@@ -1,12 +1,13 @@
 import styled from "styled-components";
 
-const Modal = ({children}) => {
-  const { closeModal } = useModal();
+const Modal = ({ isOpen, closeModal, children }) => {
+  if (!isOpen) return null;
+
   return (
     <Container>
       <ModalContainer>
         <ButtonModalClose onClick={closeModal}>
-          <IconX />
+          {/*<IconX />*/}
         </ButtonModalClose>
         <div>
           <ModalContent>
@@ -17,7 +18,7 @@ const Modal = ({children}) => {
       </ModalContainer>
     </Container>
   );
-}
+};
 
 
 const Container = styled.div`
@@ -32,10 +33,11 @@ const Container = styled.div`
 const ModalContainer = styled.div`
   position: relative;
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   overflow: scroll;
-  padding: 30px 120px 0;
 `;
 const Screen = styled.div`
   position: fixed;
@@ -52,10 +54,13 @@ const ModalContent = styled.div`
   z-index: 10;
   width: 100%;
   min-height: 100%;
-  padding-bottom: 100px;
 `;
 
 const ContentInner = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   padding: 30px;
   border-radius: 9px;
   background-color: #fff;
