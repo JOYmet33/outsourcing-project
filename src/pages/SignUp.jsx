@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SignContainer, SignH1, SignForm, SignInput, SignButton } from "../components/SignIn/SgnIn.styled";
 import { register } from "../lib/api/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -50,9 +50,9 @@ const SignUp = () => {
         <SignInput type="text" placeholder="닉네임" value={nickname} onChange={(e) => setNickname(e.target.value)} />
         <SignButton>이메일로 회원가입하기</SignButton>
       </SignForm>
-      {/* <p>
-        이미 계정이 있으신가요? <a herf={`${local}/sign_in`}>로그인</a>
-      </p> */}
+      <p>
+        이미 계정이 있으신가요? <Link to="/sign_in">로그인</Link>
+      </p>
     </SignContainer>
   );
 };

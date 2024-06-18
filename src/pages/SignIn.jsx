@@ -9,6 +9,7 @@ import {
   SignButton,
   SignGoogleButton,
 } from "../components/SignIn/SgnIn.styled";
+import { Link } from "react-router-dom";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -35,7 +36,7 @@ const SignIn = () => {
       <hr />
       <SignGoogleButton>Google</SignGoogleButton>
       <p>
-        계정이 없으신가요? <span>회원가입</span>
+        계정이 없으신가요? <Link to="/sign_up">회원가입</Link>
       </p>
     </SignContainer>
   );
