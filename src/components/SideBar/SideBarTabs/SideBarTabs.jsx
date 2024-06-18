@@ -1,5 +1,5 @@
-import { SIDE_BAR_TABS } from "../../constants/sideBarTabConstants";
-import Tab from "./Tab";
+import { SIDE_BAR_TABS } from "../../../constants/sideBarTabConstants";
+import Tab from "../Tab/Tab";
 
 const SideBarTabs = ({ onClick }) => {
   return (

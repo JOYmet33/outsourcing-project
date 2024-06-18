@@ -1,12 +1,12 @@
-import styled from "styled-components";
-import SideBarTabs from "./SideBarTabs";
-import FirstImage from "./FirstImage";
-import CampSiteName from "./CampSiteName";
-import { act, useState } from "react";
+import SideBarTabs from "./SideBarTabs/SideBarTabs";
+import FirstImage from "./FirstImage/FirstImage";
+import CampSiteName from "./CampSiteName/CampSiteName";
+import { useState } from "react";
 import { SIDE_BAR_TABS } from "../../constants/sideBarTabConstants";
-import SideBarHome from "./SideBarHome";
-import SideBarReviews from "./SideBarReviews";
-import SideBarAmenities from "./SideBarAmenities";
+import SideBarHome from "./SideBarHome/SideBarHome";
+import SideBarReviews from "./SideBarReviews/SideBarReviews";
+import SideBarAmenities from "./SideBarAmenities/SideBarAmenities";
+import { Wrapper } from "./SideBar.styled";
 
 const sideBarComponents = {
   SideBarHome,
@@ -35,10 +35,3 @@ const SideBar = () => {
 };
 
 export default SideBar;
-
-const Wrapper = styled.aside`
-  display: flex;
-  flex-direction: column;
-  width: 450px;
-  height: 100%;
-`;
