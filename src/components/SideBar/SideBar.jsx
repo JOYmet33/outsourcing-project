@@ -2,7 +2,7 @@ import styled from "styled-components";
 import SideBarTabs from "./SideBarTabs";
 import FirstImage from "./FirstImage";
 import CampSiteName from "./CampSiteName";
-import { act, useState } from "react";
+import { useState } from "react";
 import { SIDE_BAR_TABS } from "../../constants/sideBarTabConstants";
 import SideBarHome from "./SideBarHome";
 import SideBarReviews from "./SideBarReviews";
@@ -25,23 +25,21 @@ const SideBar = ({ selectedSite }) => {
 
   const ActiveComponent = sideBarComponents[`SideBar${activeTab}`];
 
-  return (
-    <Wrapper>
-      {selectedSite && (
-        <>
-          <CampSiteName name={selectedSite.facltNm} />
-          <FirstImage img={selectedSite.firstImageUrl} />
-          <SideBarTabs onClick={handleTapClick} />
-          {ActiveComponent && <ActiveComponent />}
-        </>
-      )}
-    </Wrapper>
-  );
+  if (selectedSite)
+    return (
+      <Wrapper>
+        <CampSiteName name={selectedSite.facltNm} />
+        <FirstImage img={selectedSite.firstImageUrl} />
+        <SideBarTabs onClick={handleTapClick} />
+        {ActiveComponent && <ActiveComponent />}
+      </Wrapper>
+    );
 };
 
 export default SideBar;
 
 const Wrapper = styled.aside`
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 16px 8px;

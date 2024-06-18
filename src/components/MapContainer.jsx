@@ -32,7 +32,7 @@ const MapContainer = ({ onClick }) => {
           });
         },
         (error) => {
-          console.error("Error fetching geolocation:", error);
+          console.error(error);
         },
       );
     } else {
