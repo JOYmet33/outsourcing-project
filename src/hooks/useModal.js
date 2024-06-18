@@ -21,5 +21,4 @@ const useModal = () => {
     modalContent,
   };
 };
-
 export default useModal;
