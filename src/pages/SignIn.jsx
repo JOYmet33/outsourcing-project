@@ -1,5 +1,3 @@
-// import {Link} from react-router-dom
-
 import { useState } from "react";
 import {
   SignContainer,
@@ -14,10 +12,6 @@ import { Link } from "react-router-dom";
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState({
-    email: "example@email.com",
-    password: "example1234",
-  });
 
   return (
     <SignContainer>
