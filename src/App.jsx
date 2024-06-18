@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
 import GlobalStyle from "../style/GlobalStyle";
+import HomeLayout from "./components/layouts/HomeLayout";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 
@@ -10,7 +10,7 @@ const App = () => {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomeLayout />} />
           <Route path="/sign_in" element={<SignIn />} />
           <Route path="/sign_up" element={<SignUp />} />
         </Routes>
