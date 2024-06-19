@@ -114,7 +114,7 @@ export const ModalInput = styled.input`
   box-sizing: border-box;
   font-size: 12px;
   border: none;
-  
+
   &:focus {
     outline: none;
   }
@@ -132,8 +132,8 @@ export const ModalFileInput = styled.input`
   box-sizing: border-box;
   font-size: 12px;
   border: none;
-  
-  &[type="file"]::file-selector-button {
+
+  &[type="file"] {
     position: absolute;
     right: 20px;
     top: 50%;
