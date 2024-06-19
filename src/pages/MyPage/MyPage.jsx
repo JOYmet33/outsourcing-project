@@ -36,7 +36,6 @@ const EditButton = styled.button`
   cursor: pointer;
   margin-left: 15px;
 `;
-
 const DeleteButton = styled.button`
   background-color: #dc3545;
   color: white;
@@ -81,6 +80,36 @@ const Mypage = () => {
   const [nickname, setNickname] = useState("");
   const [userData, setUserData] = useState(null);
   const [userReviews, setUserReviews] = useState([]);
+  const [profileImage, setProfileImage] = useState("");
+  const [userImgSave, setUserImgSave] = useState(null);
+
+  const userId = "d5e63f18-6baa-4498-a9f0-6722a4d0abd9";
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: userData, error: userError } = await supabase.from("users").select("*").eq("id", userId).single();
+
+      if (userError) {
+        console.log(userError.message);
+      } else {
+        setUserData(userData);
+        setNickname(userData.nickname);
+        setProfileImage(userData.image);
+      }
+
+      const { data: reviewsData, error: reviewsError } = await supabase
+        .from("review")
+        .select("*")
+        .eq("user_id", userId);
+
+      if (reviewsError) {
+        console.log("에러", reviewsError.message);
+      } else {
+        setUserReviews(reviewsData);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleNicknameChange = (e) => {
     setNickname(e.target.value);
@@ -92,43 +121,42 @@ const Mypage = () => {
 
   const handleNicknameSave = async () => {
     const { data, error } = await supabase.from("users").update({ nickname }).eq("id", userData.id);
-
     if (error) {
-      console.log("Error updating nickname:", error);
+      console.error("에러", error.message);
     } else {
       setUserData((prev) => ({ ...prev, nickname }));
       setIsEditingNickname(false);
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const userId = "d5e63f18-6baa-4498-a9f0-6722a4d0abd9";
+  const handleImgUrlSave = async (imageUrl) => {
+    const { data, error } = await supabase.from("users").update({ image: imageUrl }).eq("id", userData.id);
+    if (error) {
+      console.error("에러", error.message);
+    } else {
+      setUserData((prev) => ({ ...prev, image: imageUrl }));
+      setProfileImage(imageUrl);
+    }
+  };
 
-      const { data: userData, error: userError } = await supabase.from("users").select("*").eq("id", userId).single();
+  const handleImageUpload = async (file) => {
+    const { data: uploadImgData, error } = await supabase.storage
+      .from("camparoo")
+      .upload(`profile/${userId}_${Date.now()}.jpg`, file);
 
-      if (userError) {
-        console.log("Error fetching user data:", userError);
-      } else {
-        setUserData(userData);
-        setNickname(userData.nickname);
-      }
+    if (error) {
+      console.error("에러", error.message);
+      return;
+    }
 
-      const { data: reviewsData, error: reviewsError } = await supabase
-        .from("review")
-        .select("*")
-        .eq("user_id", userId);
+    const { data: publicImgData } = await supabase.storage.from("camparoo").getPublicUrl(uploadImgData.path);
+    console.log(publicImgData);
 
-      if (reviewsError) {
-        console.log("Error fetching reviews:", reviewsError);
-      } else {
-        setUserReviews(reviewsData);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+    setProfileImage(publicImgData.publicUrl);
+    setUserImgSave(publicImgData.publicUrl);
+    handleImgUrlSave(publicImgData.publicUrl);
+  };
+  // 콘솔에 찍으면서 하나하나 검사!!!
   return (
     <PageContainer>
       <Header />
@@ -136,10 +164,17 @@ const Mypage = () => {
         <ProfileContainer>
           <div>
             <Image
-              src="https://search.pstatic.net/sunny/?src=http%3A%2F%2Fthumbnail.10x10.co.kr%2Fwebimage%2Fimage%2Fbasic600%2F528%2FB005280039.jpg%3Fcmd%3Dthumb%26w%3D500%26h%3D500%26fit%3Dtrue%26ws%3Dfalse&type=sc960_832"
-              alt="user 이미지"
+              src={profileImage ? profileImage : "이미지를 추가해주세요!"}
+              alt={profileImage ? "프로필 이미지" : "이미지를 추가해주세요!"}
             />
-            <EditButton>수정</EditButton>
+            <EditButton onClick={() => document.getElementById("fileInput").click()}>이미지 업로드</EditButton>
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={(e) => handleImageUpload(e.target.files[0])}
+            />
           </div>
           <ProfileInfo>
             <div>
