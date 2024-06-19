@@ -9,6 +9,8 @@ import SideBarReviews from "./SideBarReviews/SideBarReviews";
 import SideBarAmenities from "./SideBarAmenities/SideBarAmenities";
 import { Wrapper } from "./SideBar.styled";
 import useCampsiteStore from "../../../store/campsiteStore";
+import CampSiteDetail from "./CampSiteDetail/CampSiteDetail";
+import CampSiteList from "./CampSiteList/CampSiteList";
 
 const sideBarComponents = {
   SideBarHome,
@@ -27,13 +29,13 @@ const SideBar = ({ selectedSite }) => {
 
   const ActiveComponent = sideBarComponents[`SideBar${activeTab}`];
 
-  if (selectedSite && isSideBarOpened)
+  if (isSideBarOpened)
     return (
       <Wrapper>
-        <CampSiteName name={selectedSite.facltNm} />
-        <FirstImage img={selectedSite.firstImageUrl} />
-        <SideBarTabs onClick={handleTapClick} />
-        {ActiveComponent && <ActiveComponent selectedSite={selectedSite} />}
+        {selectedSite && (
+          <CampSiteDetail selectedSite={selectedSite} ActiveComponent={ActiveComponent} onClick={handleTapClick} />
+        )}
+        <CampSiteList />
       </Wrapper>
     );
 };

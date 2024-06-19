@@ -15,7 +15,7 @@ const MapContainer = ({ onClick }) => {
   const [position, setPosition] = useState({ lat: 37.5665, lng: 126.978 });
   const keyword = useCampsiteStore((state) => state.keyword);
   const { data, error: queryError } = useQuery({
-    queryKey: ["campingSites", { keyword }],
+    queryKey: ["campingSites", { keyword, position }],
     queryFn: async () => {
       try {
         if (keyword) {
