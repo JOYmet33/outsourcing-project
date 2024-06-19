@@ -11,10 +11,11 @@ const MapContainer = ({ onClick }) => {
   const { error: kakaoError } = useKakaoLoader({
     appkey: API_KEY,
   });
+  const openSideBar = useCampsiteStore((state) => state.openSideBar);
   const [position, setPosition] = useState({ lat: 37.5665, lng: 126.978 });
   const keyword = useCampsiteStore((state) => state.keyword);
   const { data, error: queryError } = useQuery({
-    queryKey: ["campingSites", { keyword }],
+    queryKey: ["campingSites", { keyword, position }],
     queryFn: async () => {
       try {
         if (keyword) {
@@ -64,7 +65,7 @@ const MapContainer = ({ onClick }) => {
           width: "100%",
           height: "100%",
         }}
-        level={3}
+        level={6}
       >
         <MapMarker
           position={{
@@ -82,14 +83,17 @@ const MapContainer = ({ onClick }) => {
         />
         {data?.map((site, index) => (
           <MapMarker
-            onClick={() => onClick(site)}
+            onClick={() => {
+              onClick(site);
+              openSideBar();
+            }}
             key={index}
             position={{
               lat: parseFloat(site.mapY),
               lng: parseFloat(site.mapX),
             }}
             title={site.facltNm}
-          />
+          ></MapMarker>
         ))}
       </Map>
     </Wrapper>
