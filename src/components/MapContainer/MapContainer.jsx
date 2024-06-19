@@ -5,16 +5,22 @@ import campsiteApi from "../../lib/api/campsite.api";
 import { Wrapper } from "./MapContainer.styled";
 import useCampsiteStore from "../../../store/campsiteStore";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
+import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
 
 const API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
-
+const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
 const MapContainer = ({ onClick }) => {
+  const keyword = useCampsiteStore((state) => state.keyword);
+  const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
+  const openSideBar = useCampsiteStore((state) => state.openSideBar);
+  const closeSideBar = useCampsiteStore((state) => state.closeSideBar);
+
+  const [position, setPosition] = useState(seoulCityHallCoordinates);
+
   const { error: kakaoError } = useKakaoLoader({
     appkey: API_KEY,
   });
-  const openSideBar = useCampsiteStore((state) => state.openSideBar);
-  const [position, setPosition] = useState({ lat: 37.5665, lng: 126.978 });
-  const keyword = useCampsiteStore((state) => state.keyword);
+
   const { data, error: queryError } = useQuery({
     queryKey: ["campingSites", { keyword, position }],
     queryFn: async () => {
@@ -33,6 +39,10 @@ const MapContainer = ({ onClick }) => {
     },
     enabled: !!position.lat && !!position.lng,
   });
+
+  const handleToggleSideBar = () => {
+    isSideBarOpened ? closeSideBar() : openSideBar();
+  };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -56,6 +66,7 @@ const MapContainer = ({ onClick }) => {
 
   return (
     <Wrapper>
+      <SideBarToggleBtn isSideBarOpened={isSideBarOpened} onClick={handleToggleSideBar} />
       <Map
         id="map"
         center={{
