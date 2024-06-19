@@ -24,7 +24,6 @@ const SideBar = ({ selectedSite }) => {
   };
 
   const ActiveComponent = sideBarComponents[`SideBar${activeTab}`];
-  console.log(selectedSite);
   if (isSideBarOpened)
     return (
       <Wrapper>

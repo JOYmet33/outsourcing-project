@@ -4,7 +4,6 @@ import SideBarTabs from "../SideBarTabs/SideBarTabs";
 import { Wrapper } from "./CampSiteDetail.styled";
 
 const CampSiteDetail = ({ selectedSite, activeTab, ActiveComponent, onClick }) => {
-  console.log(activeTab);
   return (
     <Wrapper>
       <CampSiteName name={selectedSite.facltNm} />

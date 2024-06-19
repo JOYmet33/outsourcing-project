@@ -2,9 +2,6 @@ import InfoItem from "../InfoItem/InfoItem";
 import { Wrapper } from "./SideBarHome.styled";
 
 const SideBarHome = ({ selectedSite }) => {
-  // exprnProgrmAt : 체험 프로그램 여부
-  // exprnProgrm : 체험 프로그램명
-
   return (
     <Wrapper>
       <InfoItem label="운영 기간" value={selectedSite.operPdCl} />
