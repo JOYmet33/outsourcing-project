@@ -15,12 +15,31 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const validateEmail = (email) => {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+    return regex.test(email);
+  };
+
   const handleSignIn = async () => {
-    //유효성 검사
-    if (email === "") {
-      alert("이메일주소를 채워주세요");
-    } else if (email.length > 20) {
-      alert("이메일 주소가 20글자 초과되었습니다");
+    // 유효성 검사
+    if (!email) {
+      alert("이메일 주소를 채워주세요.");
+
+      return;
+    }
+    if (!validateEmail(email)) {
+      alert("이메일 형식으로 이메일 주소를 입력해주세요.");
+      setEmail("");
+      return;
+    }
+    if (!password) {
+      alert("비밀번호를 채워주세요.");
+      return;
+    }
+    if (password.length < 6) {
+      alert("비밀번호는 6글자 이상이어야 합니다.");
+      setPassword("");
+      return;
     }
 
     try {
@@ -28,8 +47,17 @@ const SignIn = () => {
         email: email,
         password: password,
       });
-      console.log("SignIn-data >> ", data);
-      // navigate("/");
+      // 유저 일치 여부
+      if (data.user) {
+        const user_nickname = data.user.user_metadata.nickname;
+        alert(`${user_nickname}님 환영합니다.`);
+        navigate("/");
+      } else {
+        alert("회원정보가 일치하지 않습니다.");
+        setEmail("");
+        setPassword("");
+        return;
+      }
     } catch (error) {
       console.log(error);
     }
