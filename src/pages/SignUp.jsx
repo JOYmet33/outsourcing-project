@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SignContainer, SignH1, SignForm, SignInput, SignButton } from "../components/SignIn/SgnIn.styled";
 import { Link } from "react-router-dom";
-import { supabase } from "../supabaseClient";
+import supabase from "../supabaseClient";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ const SignUp = () => {
     console.log("Insert >>", data);
   };
 
-  return ( 
+  return (
     <SignContainer>
       <SignH1>회원가입</SignH1>
       <SignForm>
