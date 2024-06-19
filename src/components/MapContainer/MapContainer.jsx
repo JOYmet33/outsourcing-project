@@ -4,6 +4,7 @@ import { Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
 import campsiteApi from "../../lib/api/campsite.api";
 import { Wrapper } from "./MapContainer.styled";
 import useCampsiteStore from "../../../store/campsiteStore";
+import campsiteMarker from "../../assets/img/marker_campsite.svg";
 
 const API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 
@@ -86,6 +87,13 @@ const MapContainer = ({ onClick }) => {
             onClick={() => {
               onClick(site);
               openSideBar();
+            }}
+            image={{
+              src: campsiteMarker,
+              size: {
+                width: 35,
+                height: 35,
+              },
             }}
             key={index}
             position={{
