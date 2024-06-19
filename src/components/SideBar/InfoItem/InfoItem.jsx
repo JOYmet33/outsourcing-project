@@ -1,10 +1,11 @@
 import { Wrapper } from "./InfoItem.styled";
 
 const InfoItem = ({ label, value }) => {
+  if (!value) return null;
   return (
     <Wrapper>
       <label>{label}</label>
-      <p>{value || "해당 항목이 존재하지 않습니다."}</p>
+      <p>{value}</p>
     </Wrapper>
   );
 };
