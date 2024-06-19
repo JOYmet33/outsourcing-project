@@ -63,7 +63,7 @@ const SignUp = () => {
       },
     });
     try {
-      const { data, error } = await supabase
+      await supabase
         .from("users")
         .insert([{ email: email, nickname: nickname }])
         .select();
