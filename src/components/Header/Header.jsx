@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Button, ButtonContainer, HeaderBar, HeaderLink, LogoContainer } from "./Header.styled";
+import { IconMyPage } from "../Icon/Icons/IconMyPage";
+import { Button, ButtonContainer, HeaderBar, HeaderLink, IconContainer, LogoContainer } from "./Header.styled";
 import SearchContainer from "./SearchContainer/SearchContainer";
 
 const Header = () => {
@@ -9,6 +10,10 @@ const Header = () => {
     navigate("/login");
   };
 
+  const moveToMyPage = () => {
+    navigate("/mypage");
+  };
+
   return (
     <HeaderBar>
       <LogoContainer>
@@ -16,6 +21,9 @@ const Header = () => {
       </LogoContainer>
       <SearchContainer />
       <ButtonContainer>
+        <IconContainer onClick={moveToMyPage}>
+          <IconMyPage src={IconMyPage} />
+        </IconContainer>
         <Button onClick={handleLogin}>로그인</Button>
       </ButtonContainer>
     </HeaderBar>
