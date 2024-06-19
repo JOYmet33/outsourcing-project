@@ -1,7 +1,3 @@
-import SideBarTabs from "./SideBarTabs/SideBarTabs";
-import FirstImage from "./FirstImage/FirstImage";
-import CampSiteName from "./CampSiteName/CampSiteName";
-
 import { useState } from "react";
 import { SIDE_BAR_TABS } from "../../constants/sideBarTabConstants";
 import SideBarHome from "./SideBarHome/SideBarHome";

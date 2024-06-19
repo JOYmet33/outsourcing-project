@@ -13,7 +13,6 @@ const Home = () => {
   const handleToggleSideBar = () => {
     isSideBarOpened ? closeSideBar() : openSideBar();
   };
-  console.log(isSideBarOpened);
   return (
     <Wrapper>
       <SideBar selectedSite={selectedSite} />
