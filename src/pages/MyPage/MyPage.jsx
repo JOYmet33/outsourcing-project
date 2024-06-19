@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../../components/Header/Header";
+import supabase from "../../supabaseClient";
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -23,8 +24,7 @@ const ProfileContainer = styled.div`
 `;
 
 const ProfileInfo = styled.div`
-  /* width: 50%; */
-  /* margin-top: 10px; */
+  margin-top: 10px;
 `;
 
 const EditButton = styled.button`
@@ -57,7 +57,8 @@ const ReviewsContainer = styled.div`
   border-top: 1px solid #ccc;
   padding-top: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const ReviewItem = styled.div`
@@ -67,17 +68,19 @@ const ReviewItem = styled.div`
   border: 1px solid #ddd;
   margin-bottom: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 700px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 350px;
-  margin-right: 320px;
-  margin-top: 13px;
+  margin-top: 7px;
 `;
 
 const Mypage = () => {
   const [isEditingNickname, setIsEditingNickname] = useState(false);
-  const [nickname, setNickname] = useState("펭귄");
+  const [nickname, setNickname] = useState("");
+  const [userData, setUserData] = useState(null);
+  const [userReviews, setUserReviews] = useState([]);
 
   const handleNicknameChange = (e) => {
     setNickname(e.target.value);
@@ -87,9 +90,44 @@ const Mypage = () => {
     setIsEditingNickname(true);
   };
 
-  const handleNicknameSave = () => {
-    setIsEditingNickname(false);
+  const handleNicknameSave = async () => {
+    const { data, error } = await supabase.from("users").update({ nickname }).eq("id", userData.id);
+
+    if (error) {
+      console.log("Error updating nickname:", error);
+    } else {
+      setUserData((prev) => ({ ...prev, nickname }));
+      setIsEditingNickname(false);
+    }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = "d5e63f18-6baa-4498-a9f0-6722a4d0abd9";
+
+      const { data: userData, error: userError } = await supabase.from("users").select("*").eq("id", userId).single();
+
+      if (userError) {
+        console.log("Error fetching user data:", userError);
+      } else {
+        setUserData(userData);
+        setNickname(userData.nickname);
+      }
+
+      const { data: reviewsData, error: reviewsError } = await supabase
+        .from("review")
+        .select("*")
+        .eq("user_id", userId);
+
+      if (reviewsError) {
+        console.log("Error fetching reviews:", reviewsError);
+      } else {
+        setUserReviews(reviewsData);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <PageContainer>
@@ -105,53 +143,34 @@ const Mypage = () => {
           </div>
           <ProfileInfo>
             <div>
-              <ProfileLabel>닉네임:</ProfileLabel>
+              <ProfileLabel>닉네임: </ProfileLabel>
               {isEditingNickname ? (
                 <input type="text" value={nickname} onChange={handleNicknameChange} />
               ) : (
-                <span>{nickname}</span>
+                <span>{userData?.nickname || "Loading..."}</span>
               )}
               <EditButton onClick={isEditingNickname ? handleNicknameSave : handleNicknameEdit}>
                 {isEditingNickname ? "저장" : "수정"}
               </EditButton>
             </div>
             <div>
-              <ProfileLabel>이메일:</ProfileLabel> <span>tnfusrltk12@naver.com</span>
+              <ProfileLabel>이메일:</ProfileLabel> <span>{userData?.email || "Loading..."}</span>
             </div>
           </ProfileInfo>
         </ProfileContainer>
       </Section>
       <ReviewsContainer>
         <div>내가 쓴 글</div>
+        {userReviews.map((review) => (
+          <ReviewItem key={review.id}>
+            <div>{review.content}</div>
+            <div>
+              <EditButton>수정</EditButton>
+              <DeleteButton>삭제</DeleteButton>
+            </div>
+          </ReviewItem>
+        ))}
       </ReviewsContainer>
-      <ReviewItem>
-        <div>내가 쓴 리뷰 1</div>
-        <div>
-          <EditButton>수정</EditButton>
-          <DeleteButton>삭제</DeleteButton>
-        </div>
-      </ReviewItem>
-      <ReviewItem>
-        <div>내가 쓴 리뷰 2</div>
-        <div>
-          <EditButton>수정</EditButton>
-          <DeleteButton>삭제</DeleteButton>
-        </div>
-      </ReviewItem>
-      <ReviewItem>
-        <div>내가 쓴 리뷰 3</div>
-        <div>
-          <EditButton>수정</EditButton>
-          <DeleteButton>삭제</DeleteButton>
-        </div>
-      </ReviewItem>
-      <ReviewItem>
-        <div>내가 쓴 리뷰 4</div>
-        <div>
-          <EditButton>수정</EditButton>
-          <DeleteButton>삭제</DeleteButton>
-        </div>
-      </ReviewItem>
     </PageContainer>
   );
 };
