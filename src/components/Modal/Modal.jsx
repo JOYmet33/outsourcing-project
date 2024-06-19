@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-const Modal = ({ isOpen, closeModal, children }) => {
+const Modal = ({ isOpen, closeModal }) => {
   if (!isOpen) return null;
 
   return (
@@ -11,7 +11,29 @@ const Modal = ({ isOpen, closeModal, children }) => {
         </ButtonModalClose>
         <div>
           <ModalContent>
-            <ContentInner>{children}</ContentInner>
+            <ContentInner>
+              <ModalForm>
+                <ModalInput
+                  type="text"
+                  placeholder="링크를 입력해주세요."
+                  name="link"
+                />
+                <ErrorMessage>123</ErrorMessage>
+                <ModalTextarea
+                  type="text"
+                  placeholder="내용을 입력해주세요."
+                  name="content"
+                />
+                <ErrorMessage>123</ErrorMessage>
+                <ModalFileInput
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                />
+                <ErrorMessage>123</ErrorMessage>
+                <ModalSubmitButton type="submit">등록하기</ModalSubmitButton>
+              </ModalForm>
+            </ContentInner>
           </ModalContent>
         </div>
         <Screen onClick={closeModal} />
@@ -61,8 +83,9 @@ const ContentInner = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  padding: 30px;
-  border-radius: 9px;
+  padding: 40px 30px;
+  width: 400px;
+  border-radius: 6px;
   background-color: #fff;
 `;
 
@@ -75,6 +98,93 @@ const ButtonModalClose = styled.div`
   cursor: pointer;
   z-index: 100;
 `;
+export const ModalForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  color: #a9a9a9;
+`;
 
+export const ModalInput = styled.input`
+  width: 100%;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #EFEFEF;
+  box-sizing: border-box;
+  font-size: 12px;
+  border: none;
+  
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: #a9a9a9;
+  }
+`;
+
+export const ModalFileInput = styled.input`
+  position: relative;
+  width: 100%;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #EFEFEF;
+  box-sizing: border-box;
+  font-size: 12px;
+  border: none;
+  
+  &[type="file"]::file-selector-button {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translate(0, -50%);
+  }
+`
+
+export const ModalTextarea = styled.textarea`
+  width: 100%;
+  height: 180px;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  background-color: #EFEFEF;
+  box-sizing: border-box;
+  border: none;
+  resize: unset;
+
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: #a9a9a9;
+  }
+`
+
+export const ModalSubmitButton = styled.button`
+  width: 100%;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--color-gray-normal);
+  color: #fff;
+  font-size: 16px;
+  text-align: center;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+`;
+
+const shake = keyframes`
+  0% { transform: translateY(0); }
+  25% { transform: translateY(-5px); }
+  50% { transform: translateY(0); }
+  75% { transform: translateY(5px); }
+  100% { transform: translateY(0); }
+`;
+export const ErrorMessage = styled.p`
+  padding-left: 10px;
+  color: red;
+  font-size: 12px;
+  animation: ${shake} 0.2s linear 3;
+`;
 
 export default Modal
