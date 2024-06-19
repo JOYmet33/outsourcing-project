@@ -8,6 +8,7 @@ import SideBarHome from "./SideBarHome/SideBarHome";
 import SideBarReviews from "./SideBarReviews/SideBarReviews";
 import SideBarAmenities from "./SideBarAmenities/SideBarAmenities";
 import { Wrapper } from "./SideBar.styled";
+import useCampsiteStore from "../../../store/campsiteStore";
 
 const sideBarComponents = {
   SideBarHome,
@@ -18,6 +19,7 @@ const sideBarComponents = {
 const initialState = SIDE_BAR_TABS[0];
 
 const SideBar = ({ selectedSite }) => {
+  const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
   const [activeTab, setActiveTab] = useState(initialState);
   const handleTapClick = (tap) => {
     setActiveTab(tap);
@@ -25,7 +27,7 @@ const SideBar = ({ selectedSite }) => {
 
   const ActiveComponent = sideBarComponents[`SideBar${activeTab}`];
 
-  if (selectedSite)
+  if (selectedSite && isSideBarOpened)
     return (
       <Wrapper>
         <CampSiteName name={selectedSite.facltNm} />
