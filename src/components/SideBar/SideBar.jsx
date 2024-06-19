@@ -24,12 +24,17 @@ const SideBar = ({ selectedSite }) => {
   };
 
   const ActiveComponent = sideBarComponents[`SideBar${activeTab}`];
-
+  console.log(selectedSite);
   if (isSideBarOpened)
     return (
       <Wrapper>
         {selectedSite && (
-          <CampSiteDetail selectedSite={selectedSite} ActiveComponent={ActiveComponent} onClick={handleTapClick} />
+          <CampSiteDetail
+            selectedSite={selectedSite}
+            activeTab={activeTab}
+            ActiveComponent={ActiveComponent}
+            onClick={handleTapClick}
+          />
         )}
         <CampSiteList />
       </Wrapper>
