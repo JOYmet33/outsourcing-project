@@ -1,5 +1,5 @@
 const CampSiteName = ({ name }) => {
-  return <div>{name}</div>;
+  return <h2>{name}</h2>;
 };
 
 export default CampSiteName;

@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import GlobalStyle from "../style/GlobalStyle";
 import HomeLayout from "./components/layouts/HomeLayout";
-import Mypage from "./pages/MyPage/MyPage";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 
 const App = () => {
   return (
@@ -10,7 +11,6 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomeLayout />} />
-          <Route path="/Mypage" element={<Mypage />} />
         </Routes>
       </BrowserRouter>
     </>
