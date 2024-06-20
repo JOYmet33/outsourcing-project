@@ -1,10 +1,11 @@
 import supabase from "../../supabaseClient.js";
 
-export const getReview = async () => {
+export const getReview = async (campsiteId) => {
   const { data, error } = await supabase.from("review").select(`
       *,
       users!inner(nickname)
-    `);
+    `)
+    .eq('campsite_id', campsiteId);
   if (error) {
     console.log("@@ error", error);
   }
