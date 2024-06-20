@@ -66,7 +66,6 @@ const SignUp = () => {
       },
     });
     if (data) {
-      console.log("Auth data >>", data); // **베포 전 삭제해야 함 **
     } else {
       console.log(error);
     }
@@ -76,7 +75,6 @@ const SignUp = () => {
         .from("users")
         .insert([{ email: email, nickname: nickname }])
         .select();
-      console.log("Camparoo data >>", data); // **베포 전 삭제해야 함 **
       if (data) {
         const user_nickname = data[0].nickname;
         alert(`${user_nickname}님 가입을 축하합니다.`);
