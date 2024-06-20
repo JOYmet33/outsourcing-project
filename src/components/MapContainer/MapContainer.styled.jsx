@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
 `;
 
 export const ResetBtn = styled.button`
+  right: 0;
   position: absolute;
   z-index: 9;
 `;
