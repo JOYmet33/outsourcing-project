@@ -2,20 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import supabase from "../../supabaseClient";
 import { IconMyPage } from "../Icon/Icons/IconMyPage";
-import {
-  Button,
-  ButtonContainer,
-  HeaderBar,
-  HeaderLink,
-  IconContainer,
-  Img,
-  Img,
-  LogoContainer,
-} from "./Header.styled";
+import { Button, ButtonContainer, HeaderBar, HeaderLink, IconContainer, Img, LogoContainer } from "./Header.styled";
 import SearchContainer from "./SearchContainer/SearchContainer";
 import useUserStore from "../../../store/userStore";
-import { useEffect, useState } from "react";
-import supabase from "../../supabaseClient";
 
 const Header = () => {
   const [userName, setUserName] = useState("");
@@ -31,6 +20,8 @@ const Header = () => {
     async function signOut() {
       const { error } = await supabase.auth.signOut();
       setSignOut();
+      setUserName("");
+      setUserImage("");
     }
     signOut();
   };
