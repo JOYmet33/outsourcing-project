@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
-import CampSiteList from "../SideBar/CampSiteList/CampSiteList";
-import { haversineDistance } from "../../utils/distance";
 import useCampsiteStore from "../../../store/campsiteStore";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
 import campsiteApi from "../../lib/api/campsite.api";
-import { DisPlayAddress, ResetBtn, Wrapper, Popup } from "./MapContainer.styled";
+import { haversineDistance } from "../../utils/distance";
+import CampSiteList from "../SideBar/CampSiteList/CampSiteList";
+import { DisPlayAddress, Popup, ResetBtn, Wrapper } from "./MapContainer.styled";
 import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
 
 const API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
@@ -28,7 +28,6 @@ const MapContainer = ({ onClick }) => {
 
   const [address, setAddress] = useState("");
   const [viewPosition, setViewPosition] = useState(seoulCityHallCoordinates);
-
   const { data, error: queryError } = useQuery({
     queryKey: ["campingSites", { keyword, position }],
     queryFn: async () => {
@@ -88,6 +87,13 @@ const MapContainer = ({ onClick }) => {
   useEffect(() => {
     handleReset();
   }, []);
+
+  useEffect(() => {
+    if (!window.kakao || !window.kakao.maps) {
+      return;
+    }
+    handleReset();
+  }, [window.kakao]);
 
   useEffect(() => {
     fetchAddress(viewPosition.lat, viewPosition.lng);
