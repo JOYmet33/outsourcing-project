@@ -47,6 +47,11 @@ export const Button = styled.button`
 `;
 
 export const IconContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   margin: 0px;
   padding: 0px;
   cursor: pointer;
@@ -55,4 +60,11 @@ export const IconContainer = styled.div`
     height: 100%;
     width: auto; /* 비율을 유지하면서 크기 조정 */
   }
+`;
+
+export const Img = styled.img`
+  height: 38px;
+  width: 38px;
+  border-radius: 60%;
+  cursor: pointer;
 `;
