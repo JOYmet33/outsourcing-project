@@ -4,9 +4,10 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 import useCampsiteStore from "../../store/campsiteStore";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
 import userPosition from "../../assets/img/user_position.svg";
-import { DisPlayAddress, Popup, ResetBtn, Wrapper } from "./MapContainer.styled";
+import { DisPlayAddress, ResetBtn, Wrapper } from "./MapContainer.styled";
 import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
 import useCampsitesQuery from "../../hooks/useCampsitesQuery";
+import Popup from "./Popup/Popup";
 
 const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
 
@@ -18,9 +19,7 @@ const MapContainer = forwardRef(
     const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
     const openSideBar = useCampsiteStore((state) => state.openSideBar);
     const closeSideBar = useCampsiteStore((state) => state.closeSideBar);
-
     const selectedSite = useCampsiteStore((state) => state.selectedSite);
-
     const [address, setAddress] = useState("");
     const [viewPosition, setViewPosition] = useState(seoulCityHallCoordinates);
 
@@ -54,10 +53,6 @@ const MapContainer = forwardRef(
         console.error("이 브라우저에서는 Geolocation 이 지원되지 않습니다.");
       }
     };
-
-    useEffect(() => {
-      handleReset();
-    }, []);
 
     useEffect(() => {
       if (!window.kakao || !window.kakao.maps) {
@@ -159,13 +154,7 @@ const MapContainer = forwardRef(
                   title={site.facltNm}
                 >
                   {showPopup && selectedSite?.contentId === site.contentId && (
-                    <Popup>
-                      <h2>{selectedSite.facltNm}</h2>
-                      <p>{selectedSite.addr1}</p>
-                      <p>{selectedSite.tel}</p>
-                      <p>거리: {selectedSite.distance} km</p>
-                      <button onClick={() => setShowPopup(false)}>닫기</button>
-                    </Popup>
+                    <Popup setShowPopup={setShowPopup} selectedSite={selectedSite} />
                   )}
                 </MapMarker>
               ))}
