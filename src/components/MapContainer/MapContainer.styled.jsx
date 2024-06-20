@@ -14,7 +14,7 @@ export const Wrapper = styled.div`
   }
 
   .map {
-    width: 75%;
+    width: 100%;
     position: relative;
   }
 `;
