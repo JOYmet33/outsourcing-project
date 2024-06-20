@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import { useEffect, useState } from "react";
+import useUserStore from "../../../store/userStore";
 import Header from "../../components/Header/Header";
-import supabase from "../../supabaseClient";
-import MyPageModal from "./MyPageModal/MyPageModal";
 import useModal from "../../hooks/useModal.js";
+import supabase from "../../supabaseClient";
 import {
-  PageContainer,
-  Section,
+  DeleteButton,
+  EditButton,
   Image,
+  PageContainer,
   ProfileContainer,
   ProfileInfo,
-  EditButton,
-  DeleteButton,
   ProfileLabel,
-  ReviewsContainer,
   ReviewItem,
+  ReviewsContainer,
+  Section,
 } from "./MyPage.styled";
+import MyPageModal from "./MyPageModal/MyPageModal";
 
 const Mypage = () => {
   const [isEditingNickname, setIsEditingNickname] = useState(false);
@@ -27,6 +27,7 @@ const Mypage = () => {
   const [signIn, setSignIn] = useState(false);
   const { isOpen, openModal, closeModal, modalContent } = useModal();
   const [userReviewId, setUserReviewId] = useState(null);
+  const { setUserName, setUserImage } = useUserStore((state) => state);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,6 +76,7 @@ const Mypage = () => {
     } else {
       setUserData((prev) => ({ ...prev, nickname }));
       setIsEditingNickname(false);
+      setUserName(nickname);
     }
   };
 
@@ -85,6 +87,7 @@ const Mypage = () => {
     } else {
       setUserData((prev) => ({ ...prev, image: imageUrl }));
       setProfileImage(imageUrl);
+      setUserImage(imageUrl);
     }
   };
 
