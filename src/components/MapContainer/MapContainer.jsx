@@ -9,12 +9,21 @@ import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
 import CampSiteList from "../SideBar/CampSiteList/CampSiteList";
 import useCampsitesQuery from "../../hooks/useCampsitesQuery";
 
-const API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
 
-const MapContainer = ({ onClick, position, setPosition, resetPosition, showPopup, setShowPopup }) => {
-  const { error: kakaoError } = useKakaoLoader({ appkey: API_KEY });
-
+const MapContainer = ({
+  onClick,
+  position,
+  setPosition,
+  resetPosition,
+  showPopup,
+  setShowPopup,
+  setShowList,
+  kakaoError,
+  ref,
+}) => {
+  // const { error: kakaoError } = useKakaoLoader({ appkey: API_KEY });
+  console.log(position);
   const setKeyword = useCampsiteStore((state) => state.setKeyword);
 
   const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
@@ -26,7 +35,7 @@ const MapContainer = ({ onClick, position, setPosition, resetPosition, showPopup
   // const [showList, setShowList] = useState(false);
   // const [showPopup, setShowPopup] = useState(false);
 
-  const mapRef = useRef();
+  // const mapRef = useRef();
 
   const [address, setAddress] = useState("");
   const [viewPosition, setViewPosition] = useState(seoulCityHallCoordinates);
@@ -61,6 +70,7 @@ const MapContainer = ({ onClick, position, setPosition, resetPosition, showPopup
   // });
 
   const handleToggleSideBar = () => {
+    setShowList(true);
     isSideBarOpened ? closeSideBar() : openSideBar();
   };
 
@@ -137,19 +147,20 @@ const MapContainer = ({ onClick, position, setPosition, resetPosition, showPopup
     });
   };
 
-  const handleMarkerClick = (site) => {
-    onClick(site);
-    openSideBar();
+  // const handleMarkerClick = (site) => {
+  //   onClick(site);
+  //   openSideBar();
 
-    if (mapRef.current) {
-      const { kakao } = window;
-      if (kakao && kakao.maps) {
-        const offsetY = 0.005;
-        mapRef.current.setCenter(new kakao.maps.LatLng(parseFloat(site.mapY) - offsetY, parseFloat(site.mapX)));
-        mapRef.current.setLevel(6);
-      }
-    }
-  };
+  //   if (mapRef.current) {
+  //     console.log(mapRef.current);
+  //     const { kakao } = window;
+  //     if (kakao && kakao.maps) {
+  //       const offsetY = 0.005;
+  //       mapRef.current.setCenter(new kakao.maps.LatLng(parseFloat(site.mapY) - offsetY, parseFloat(site.mapX)));
+  //       mapRef.current.setLevel(6);
+  //     }
+  //   }
+  // };
 
   if (kakaoError || queryError) return <div>Error loading data: {kakaoError?.message || queryError?.message}</div>;
 
@@ -174,7 +185,7 @@ const MapContainer = ({ onClick, position, setPosition, resetPosition, showPopup
             level={6}
             onDragEnd={handleDragEnd}
             onZoomChanged={handleZoomChanged}
-            ref={mapRef}
+            ref={ref}
           >
             <MapMarker
               position={{
@@ -192,7 +203,7 @@ const MapContainer = ({ onClick, position, setPosition, resetPosition, showPopup
             />
             {data?.map((site, index) => (
               <MapMarker
-                onClick={() => handleMarkerClick(site)}
+                onClick={() => onClick(site)}
                 image={{
                   src: campsiteMarker,
                   size: {

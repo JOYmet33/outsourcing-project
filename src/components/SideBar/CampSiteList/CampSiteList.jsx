@@ -13,8 +13,7 @@ const ListItem = ({ item, index, onClick }) => (
 
 const CampSiteList = ({ data, handleMarkerClick, showList, setShowList }) => {
   return (
-    <>
-      <button onClick={() => setShowList(!showList)}>{showList ? "ⲷ" : "Ⲷ"}</button>
+    <div>
       {showList && (
         <ListWrapper>
           <h1>근처 캠핑장</h1>
@@ -23,7 +22,7 @@ const CampSiteList = ({ data, handleMarkerClick, showList, setShowList }) => {
           ))}
         </ListWrapper>
       )}
-    </>
+    </div>
   );
 };
 
