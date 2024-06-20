@@ -87,6 +87,7 @@ const Mypage = () => {
   const [userImgSave, setUserImgSave] = useState(null);
   const [signIn, setSignIn] = useState(false);
   const { isOpen, openModal, closeModal, modalContent } = useModal();
+  const [userReviewId, setUserReviewId] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -164,7 +165,7 @@ const Mypage = () => {
     handleImgUrlSave(publicImgData.publicUrl);
   };
   // 콘솔에 찍으면서 하나하나 검사!!!
-
+  // console.log(userReviews);
   return (
     <PageContainer>
       <Header />
@@ -209,14 +210,23 @@ const Mypage = () => {
           <ReviewItem key={review.id}>
             <div>{review.content}</div>
             <div>
-              <EditButton onClick={() => openModal(<div>리뷰탭</div>)}>수정</EditButton>
-              <MyPageModal isOpen={isOpen} closeModal={closeModal}>
-                {modalContent}
-              </MyPageModal>
+              {/* <EditButton onClick={(() => setUserReviewId(review.id), openModal(<div>리뷰탭</div>))}>수정</EditButton> */}
+              <EditButton
+                onClick={() => {
+                  setUserReviewId(review.id);
+                  openModal(<div>리뷰탭</div>);
+                }}
+              >
+                수정
+              </EditButton>
+
               <DeleteButton>삭제</DeleteButton>
             </div>
           </ReviewItem>
         ))}
+        <MyPageModal isOpen={isOpen} closeModal={closeModal} reviewId={userReviewId}>
+          {modalContent}
+        </MyPageModal>
       </ReviewsContainer>
     </PageContainer>
   );

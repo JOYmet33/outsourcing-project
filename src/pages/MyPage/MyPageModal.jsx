@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { addReview } from "../../lib/api/review.js";
 import supabase from "../../supabaseClient.js";
 import { getReviewByUserId } from "../../lib/api/review.js";
-// 슈퍼베이스 리뷰 가져오기 보여주는걸 value에 적용시키고
+import { updateReview } from "../../lib/api/review.js";
 
-const MyPageModal = ({ isOpen, closeModal }) => {
-  const [formData, setFormData] = useState({ link: "", content: "", image: null });
-  const [errors, setErrors] = useState({ link: "", content: "", image: "" });
+const MyPageModal = ({ isOpen, closeModal, reviewId }) => {
+  const [formData, setFormData] = useState({ content: "", image: null });
+  const [errors, setErrors] = useState({ content: "", image: "" });
   const [user, setUser] = useState(null);
   const [userReview, setUserReview] = useState("");
-
+  // console.log(reviewId);
   useEffect(() => {
     const getUserReview = async () => {
       const {
@@ -19,11 +19,9 @@ const MyPageModal = ({ isOpen, closeModal }) => {
       setUser(user);
       const userReview = await getReviewByUserId(user.id);
       setUserReview(userReview);
+      setFormData({ ...formData, content: userReview[0].content });
     };
     getUserReview();
-    // getReviewByUserId(user.id);
-    // const setUserReview = getReviewByUserId(user.id);
-    // console.log(setUserReview);
   }, []);
 
   if (!isOpen) return null;
@@ -39,6 +37,7 @@ const MyPageModal = ({ isOpen, closeModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { content, image } = formData;
+    console.log(reviewId);
 
     // fomData가 존재 하는지??
     // formData 를 어떤 형태로 업로드 할것인지?
@@ -51,24 +50,27 @@ const MyPageModal = ({ isOpen, closeModal }) => {
       setErrors(errorMessages);
       return;
     }
-
     // 파일 이름 안전하게 변환
-    let safeFileName = image.name.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_\-\.]/g, "");
+    // let safeFileName = `${image.name.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_\-\.]/g, "")}_${Date.now()}`;
+
+    const fileExt = image.name.split(".").pop();
+    const filePath = `${Date.now()}.${fileExt}`;
+
     let imageUrl = "";
     if (image) {
-      const { data, error } = await supabase.storage.from("camparoo").upload(`review/${safeFileName}`, image);
+      const { data, error } = await supabase.storage.from("camparoo").upload(`review/${filePath}`, image);
 
       if (error) {
         console.error("이미지 업로드 오류:", error);
         return;
       }
 
-      imageUrl = supabase.storage.from("camparoo").getPublicUrl(`review/${safeFileName}`).publicUrl;
+      imageUrl = supabase.storage.from("camparoo").getPublicUrl(`review/${filePath}`).publicUrl;
     }
 
     // 리뷰를 Supabase에 삽입
     const newReview = { content, image_url: imageUrl, user_id: user.id };
-    const result = await addReview(newReview);
+    const result = await updateReview(newReview, reviewId);
 
     if (result) {
       closeModal();
@@ -86,7 +88,6 @@ const MyPageModal = ({ isOpen, closeModal }) => {
                 <ModalTextarea
                   placeholder="내용을 입력해주세요."
                   name="content"
-                  //밑에
                   value={formData.content}
                   onChange={handleChange}
                 />
