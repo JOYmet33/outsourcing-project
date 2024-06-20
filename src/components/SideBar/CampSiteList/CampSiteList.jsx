@@ -13,16 +13,16 @@ const ListItem = ({ item, index, onClick }) => (
 
 const CampSiteList = ({ data, handleMarkerClick, showList, setShowList }) => {
   return (
-    <div>
+    <ListWrapper>
       {showList && (
-        <ListWrapper>
+        <div>
           <h1>근처 캠핑장</h1>
           {data.map((item, index) => (
             <ListItem key={item.contentId} item={item} index={index} onClick={handleMarkerClick} />
           ))}
-        </ListWrapper>
+        </div>
       )}
-    </div>
+    </ListWrapper>
   );
 };
 
