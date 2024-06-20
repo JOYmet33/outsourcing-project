@@ -1,14 +1,7 @@
 import { useState } from "react";
-import {
-  SignContainer,
-  SignH1,
-  SignForm,
-  SignInput,
-  SignButton,
-  SignGoogleButton,
-} from "../components/SignIn/SgnIn.styled";
+import { SignContainer, SignH1, SignForm, SignInput, SignButton, SignGoogleButton } from "./Sign.styled";
 import { Link, useNavigate } from "react-router-dom";
-import supabase from "../supabaseClient";
+import supabase from "../../supabaseClient";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
