@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import useUserStore from "../../../store/userStore";
 import Header from "../../components/Header/Header";
 import useModal from "../../hooks/useModal.js";
+import useUserStore from "../../store/userStore";
 import supabase from "../../supabaseClient";
 import {
   DeleteButton,

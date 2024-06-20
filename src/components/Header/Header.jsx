@@ -25,24 +25,23 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
+    const checkLogin = async () => {
+      const session = await supabase.auth.getSession();
+      const user = session.data.session?.user;
+
+      if (user) {
+        const { data, error } = await supabase.from("users").select("image, nickname").eq("id", user.id).single();
+
+        if (error) {
+          console.error("Error fetching user info:", error);
+        } else {
+          setUserImage(data.image);
+          setUserName(data.nickname);
+        }
+      }
+    };
     checkLogin();
   }, []);
-
-  const checkLogin = async () => {
-    const session = await supabase.auth.getSession();
-    const user = session.data.session?.user;
-
-    if (user) {
-      const { data, error } = await supabase.from("users").select("image, nickname").eq("id", user.id).single();
-
-      if (error) {
-        console.error("Error fetching user info:", error);
-      } else {
-        setUserImage(data.image);
-        setUserName(data.nickname);
-      }
-    }
-  };
 
   const handleSignIn = () => {
     navigate("/sign_in");
