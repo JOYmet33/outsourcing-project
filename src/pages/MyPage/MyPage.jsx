@@ -38,6 +38,7 @@ const EditButton = styled.button`
   cursor: pointer;
   margin-left: 15px;
 `;
+
 const DeleteButton = styled.button`
   background-color: #dc3545;
   color: white;
@@ -84,13 +85,19 @@ const Mypage = () => {
   const [userReviews, setUserReviews] = useState([]);
   const [profileImage, setProfileImage] = useState("");
   const [userImgSave, setUserImgSave] = useState(null);
+  const [signIn, setSignIn] = useState(false);
   const { isOpen, openModal, closeModal, modalContent } = useModal();
 
-  const userId = "d5e63f18-6baa-4498-a9f0-6722a4d0abd9";
   useEffect(() => {
     const fetchData = async () => {
-      const { data: userData, error: userError } = await supabase.from("users").select("*").eq("id", userId).single();
+      const session = await supabase.auth.getSession();
+      if (!session.data.session) return;
 
+      setSignIn(true);
+
+      const userId = session.data.session.user.id;
+
+      const { data: userData, error: userError } = await supabase.from("users").select("*").eq("id", userId).single();
       if (userError) {
         console.log(userError.message);
       } else {
@@ -103,7 +110,6 @@ const Mypage = () => {
         .from("review")
         .select("*")
         .eq("user_id", userId);
-
       if (reviewsError) {
         console.log("에러", reviewsError.message);
       } else {
@@ -112,7 +118,7 @@ const Mypage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [signIn]);
 
   const handleNicknameChange = (e) => {
     setNickname(e.target.value);
@@ -145,7 +151,7 @@ const Mypage = () => {
   const handleImageUpload = async (file) => {
     const { data: uploadImgData, error } = await supabase.storage
       .from("camparoo")
-      .upload(`profile/${userId}_${Date.now()}.jpg`, file);
+      .upload(`profile/${userData.id}_${Date.now()}.jpg`, file);
 
     if (error) {
       console.error("에러", error.message);
@@ -153,16 +159,16 @@ const Mypage = () => {
     }
 
     const { data: publicImgData } = await supabase.storage.from("camparoo").getPublicUrl(uploadImgData.path);
-    console.log(publicImgData);
-
     setProfileImage(publicImgData.publicUrl);
     setUserImgSave(publicImgData.publicUrl);
     handleImgUrlSave(publicImgData.publicUrl);
   };
   // 콘솔에 찍으면서 하나하나 검사!!!
+
   return (
     <PageContainer>
       <Header />
+
       <Section>
         <ProfileContainer>
           <div>
@@ -170,7 +176,7 @@ const Mypage = () => {
               src={profileImage ? profileImage : "이미지를 추가해주세요!"}
               alt={profileImage ? "프로필 이미지" : "이미지를 추가해주세요!"}
             />
-            <EditButton onClick={() => document.getElementById("fileInput").click()}>이미지 업로드</EditButton>
+            <EditButton onClick={() => document.getElementById("fileInput").click()}>이미지 수정</EditButton>
             <input
               id="fileInput"
               type="file"

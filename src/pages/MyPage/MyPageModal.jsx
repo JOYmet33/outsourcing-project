@@ -2,20 +2,28 @@ import styled, { keyframes } from "styled-components";
 import { useEffect, useState } from "react";
 import { addReview } from "../../lib/api/review.js";
 import supabase from "../../supabaseClient.js";
+import { getReviewByUserId } from "../../lib/api/review.js";
+// 슈퍼베이스 리뷰 가져오기 보여주는걸 value에 적용시키고
 
 const MyPageModal = ({ isOpen, closeModal }) => {
   const [formData, setFormData] = useState({ link: "", content: "", image: null });
   const [errors, setErrors] = useState({ link: "", content: "", image: "" });
   const [user, setUser] = useState(null);
+  const [userReview, setUserReview] = useState("");
 
   useEffect(() => {
-    const getUser = async () => {
+    const getUserReview = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
       setUser(user);
+      const userReview = await getReviewByUserId(user.id);
+      setUserReview(userReview);
     };
-    getUser();
+    getUserReview();
+    // getReviewByUserId(user.id);
+    // const setUserReview = getReviewByUserId(user.id);
+    // console.log(setUserReview);
   }, []);
 
   if (!isOpen) return null;
@@ -78,6 +86,7 @@ const MyPageModal = ({ isOpen, closeModal }) => {
                 <ModalTextarea
                   placeholder="내용을 입력해주세요."
                   name="content"
+                  //밑에
                   value={formData.content}
                   onChange={handleChange}
                 />
