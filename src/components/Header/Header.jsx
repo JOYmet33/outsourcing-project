@@ -4,12 +4,31 @@ import supabase from "../../supabaseClient";
 import { IconMyPage } from "../Icon/Icons/IconMyPage";
 import { Button, ButtonContainer, HeaderBar, HeaderLink, IconContainer, Img, LogoContainer } from "./Header.styled";
 import SearchContainer from "./SearchContainer/SearchContainer";
+import useUserStore from "../../../store/userStore";
 
 const Header = () => {
   const [userName, setUserName] = useState("");
   const [userImage, setUserImage] = useState("");
+  const navigate = useNavigate();
+  const { isSignIn, setSignIn, setSignOut } = useUserStore((state) => state);
 
-  async function checkLogin() {
+  useEffect(() => {
+    const checkSignIn = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setSignIn();
+      } else {
+        setSignOut();
+      }
+    };
+    checkSignIn();
+  }, []);
+
+  useEffect(() => {
+    checkLogin();
+  }, []);
+
+  const checkLogin = async () => {
     const session = await supabase.auth.getSession();
     const user = session.data.session?.user;
 
@@ -23,15 +42,20 @@ const Header = () => {
         setUserName(data.nickname);
       }
     }
-  }
-  useEffect(() => {
-    checkLogin();
-  }, []);
+  };
 
-  const navigate = useNavigate();
-
-  const handleLogin = () => {
+  const handleSignIn = () => {
     navigate("/sign_in");
+  };
+
+  const handleSignOut = () => {
+    const signOut = async () => {
+      await supabase.auth.signOut();
+      setSignOut();
+      setUserName("");
+      setUserImage("");
+    };
+    signOut();
   };
 
   const moveToMyPage = () => {
@@ -49,7 +73,7 @@ const Header = () => {
           {userImage ? <Img src={userImage} /> : <IconMyPage src={IconMyPage} />}
           <div>{userName ? `${userName}님` : ""}</div>
         </IconContainer>
-        <Button onClick={handleLogin}>로그인</Button>
+        {isSignIn ? <Button onClick={handleSignOut}>로그아웃</Button> : <Button onClick={handleSignIn}>로그인</Button>}
       </ButtonContainer>
     </HeaderBar>
   );
