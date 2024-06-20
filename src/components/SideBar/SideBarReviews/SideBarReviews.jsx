@@ -1,5 +1,4 @@
 import Modal from "../../Modal/Modal.jsx";
-import useModal from "../../../hooks/useModal.js";
 import { useEffect, useState } from "react";
 import { getReview } from "../../../lib/api/review.js";
 import {
@@ -8,10 +7,12 @@ import {
   ReviewImageWrapper,
   ReviewItem,
   ReviewItemContent,
-  ReviewItemList, ReviewNickName,
+  ReviewItemList,
+  ReviewNickName,
 } from "./SideBarReviews.styled.jsx";
 import { IconEdit } from "../../Icon/Icons/IconEdit.jsx";
 import Icon from "../../Icon/Icon.jsx";
+import useModal from "../../../hooks/useModal.js";
 
 const SideBarReviews = () => {
   const { isOpen, openModal, closeModal, modalContent } = useModal();
@@ -33,11 +34,9 @@ const SideBarReviews = () => {
       <Modal isOpen={isOpen} closeModal={closeModal}>
         {modalContent}
       </Modal>
-      <ReviewButton onClick={() => openModal()}>
-        리뷰쓰기
-      </ReviewButton>
+      <ReviewButton onClick={() => openModal()}>리뷰쓰기</ReviewButton>
       <ReviewItemList>
-        {reviews.map(review => (
+        {reviews.map((review) => (
           <ReviewItem key={review.id}>
             <ReviewNickName>작성자 : {review.users.nickname}</ReviewNickName>
             <ReviewImageWrapper>
@@ -50,6 +49,5 @@ const SideBarReviews = () => {
     </ReviewContainer>
   );
 };
-
 
 export default SideBarReviews;
