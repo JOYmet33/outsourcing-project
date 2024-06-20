@@ -164,8 +164,16 @@ const Mypage = () => {
     setUserImgSave(publicImgData.publicUrl);
     handleImgUrlSave(publicImgData.publicUrl);
   };
-  // 콘솔에 찍으면서 하나하나 검사!!!
-  // console.log(userReviews);
+
+  const handleReviewDelete = async (reviewId) => {
+    const { error } = await supabase.from("review").delete().eq("id", reviewId);
+    if (error) {
+      console.error("에러", error.message);
+    } else {
+      setUserReviews((prevReviews) => prevReviews.filter((review) => review.id !== reviewId));
+    }
+  };
+
   return (
     <PageContainer>
       <Header />
@@ -210,7 +218,6 @@ const Mypage = () => {
           <ReviewItem key={review.id}>
             <div>{review.content}</div>
             <div>
-              {/* <EditButton onClick={(() => setUserReviewId(review.id), openModal(<div>리뷰탭</div>))}>수정</EditButton> */}
               <EditButton
                 onClick={() => {
                   setUserReviewId(review.id);
@@ -220,7 +227,7 @@ const Mypage = () => {
                 수정
               </EditButton>
 
-              <DeleteButton>삭제</DeleteButton>
+              <DeleteButton onClick={() => handleReviewDelete(review.id)}>삭제</DeleteButton>
             </div>
           </ReviewItem>
         ))}
