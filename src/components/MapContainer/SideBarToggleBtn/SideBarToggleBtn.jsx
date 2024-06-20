@@ -1,4 +1,4 @@
-import { Button } from "./SideBarToggleBtn.tyled";
+import { Button } from "./SideBarToggleBtn.styled";
 import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from "react-icons/md";
 
 const SideBarToggleBtn = ({ isSideBarOpened, onClick }) => {
