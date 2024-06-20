@@ -3,6 +3,7 @@ import GlobalStyle from "../style/GlobalStyle";
 import HomeLayout from "./components/layouts/HomeLayout";
 import SignIn from "./pages/Sign/SignIn";
 import SignUp from "./pages/Sign/SignUp";
+import Mypage from "./pages/MyPage/MyPage";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
           <Route path="/" element={<HomeLayout />} />
           <Route path="/sign_in" element={<SignIn />} />
           <Route path="/sign_up" element={<SignUp />} />
+          <Route path="/mypage" element={<Mypage />} />
         </Routes>
       </BrowserRouter>
     </>
