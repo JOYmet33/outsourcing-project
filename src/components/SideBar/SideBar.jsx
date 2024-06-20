@@ -16,8 +16,9 @@ const sideBarComponents = {
 
 const initialState = SIDE_BAR_TABS[0];
 
-const SideBar = ({ selectedSite }) => {
+const SideBar = () => {
   const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
+  const selectedSite = useCampsiteStore((state) => state.selectedSite);
   const [activeTab, setActiveTab] = useState(initialState);
   const handleTapClick = (tap) => {
     setActiveTab(tap);

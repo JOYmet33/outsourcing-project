@@ -5,7 +5,6 @@ import useCampsiteStore from "../../store/campsiteStore";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
 import campsiteApi from "../../lib/api/campsite.api";
 import { haversineDistance } from "../../utils/distance";
-import CampSiteList from "../SideBar/CampSiteList/CampSiteList";
 import { DisPlayAddress, Popup, ResetBtn, Wrapper } from "./MapContainer.styled";
 import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
 
@@ -17,17 +16,24 @@ const MapContainer = ({ onClick }) => {
 
   const keyword = useCampsiteStore((state) => state.keyword);
   const setKeyword = useCampsiteStore((state) => state.setKeyword);
+
   const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
   const openSideBar = useCampsiteStore((state) => state.openSideBar);
-  const [selectedItem, setSelectedItem] = useState(null);
   const closeSideBar = useCampsiteStore((state) => state.closeSideBar);
+
+  const selectedSite = useCampsiteStore((state) => state.selectedSite);
+  const setSelectedSite = useCampsiteStore((state) => state.setSelectedSite);
+
   const [position, setPosition] = useState(seoulCityHallCoordinates);
+
   const [showList, setShowList] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+
   const mapRef = useRef();
 
   const [address, setAddress] = useState("");
   const [viewPosition, setViewPosition] = useState(seoulCityHallCoordinates);
+
   const { data, error: queryError } = useQuery({
     queryKey: ["campingSites", { keyword, position }],
     queryFn: async () => {
@@ -134,7 +140,7 @@ const MapContainer = ({ onClick }) => {
   };
 
   const handleMarkerClick = (site) => {
-    setSelectedItem(site);
+    setSelectedSite(site);
     setShowPopup(true);
     setShowList(true);
     onClick(site);
@@ -204,12 +210,12 @@ const MapContainer = ({ onClick }) => {
                 }}
                 title={site.facltNm}
               >
-                {showPopup && selectedItem?.contentId === site.contentId && (
+                {showPopup && selectedSite?.contentId === site.contentId && (
                   <Popup>
-                    <h2>{selectedItem.facltNm}</h2>
-                    <p>{selectedItem.addr1}</p>
-                    <p>{selectedItem.tel}</p>
-                    <p>거리: {selectedItem.distance} km</p>
+                    <h2>{selectedSite.facltNm}</h2>
+                    <p>{selectedSite.addr1}</p>
+                    <p>{selectedSite.tel}</p>
+                    <p>거리: {selectedSite.distance} km</p>
                     <button onClick={() => setShowPopup(false)}>닫기</button>
                   </Popup>
                 )}
