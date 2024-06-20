@@ -55,6 +55,8 @@ export const SignButton = styled.button`
   border-radius: 8px;
 
   color: white;
+
+  cursor: pointer;
 `;
 
 export const SignGoogleButton = styled.button`
@@ -63,4 +65,6 @@ export const SignGoogleButton = styled.button`
 
   background: #d9d9d9;
   border-radius: 8px;
+
+  cursor: pointer;
 `;

@@ -45,6 +45,7 @@ const SignIn = () => {
         email: email,
         password: password,
       });
+      console.lpo;
       if (!data.user) {
         console.log(error);
         alert("회원정보가 일치하지 않습니다.");

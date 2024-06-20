@@ -47,12 +47,24 @@ export const Button = styled.button`
 `;
 
 export const IconContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   margin: 0px;
   padding: 0px;
   cursor: pointer;
-  height: 39px; /* 아이콘의 세로 크기 */
+  height: 39px;
   svg {
     height: 100%;
-    width: auto; /* 비율을 유지하면서 크기 조정 */
+    width: auto;
   }
+`;
+
+export const Img = styled.img`
+  height: 38px;
+  width: 38px;
+  border-radius: 60%;
+  cursor: pointer;
 `;
