@@ -1,62 +1,76 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
-import useCampsiteStore from "../../../store/campsiteStore";
+import useCampsiteStore from "../../store/campsiteStore";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
 import campsiteApi from "../../lib/api/campsite.api";
-import { haversineDistance } from "../../utils/distance";
-import CampSiteList from "../SideBar/CampSiteList/CampSiteList";
 import { DisPlayAddress, Popup, ResetBtn, Wrapper } from "./MapContainer.styled";
 import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
+import CampSiteList from "../SideBar/CampSiteList/CampSiteList";
+import useCampsitesQuery from "../../hooks/useCampsitesQuery";
 
-const API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
 
-const MapContainer = ({ onClick }) => {
-  const { error: kakaoError } = useKakaoLoader({ appkey: API_KEY });
-
-  const keyword = useCampsiteStore((state) => state.keyword);
+const MapContainer = ({
+  onClick,
+  position,
+  setPosition,
+  resetPosition,
+  showPopup,
+  setShowPopup,
+  setShowList,
+  kakaoError,
+  ref,
+}) => {
+  // const { error: kakaoError } = useKakaoLoader({ appkey: API_KEY });
+  console.log(position);
   const setKeyword = useCampsiteStore((state) => state.setKeyword);
+
   const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
   const openSideBar = useCampsiteStore((state) => state.openSideBar);
-  const [selectedItem, setSelectedItem] = useState(null);
   const closeSideBar = useCampsiteStore((state) => state.closeSideBar);
-  const [position, setPosition] = useState(seoulCityHallCoordinates);
-  const [showList, setShowList] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const mapRef = useRef();
+
+  const selectedSite = useCampsiteStore((state) => state.selectedSite);
+
+  // const [showList, setShowList] = useState(false);
+  // const [showPopup, setShowPopup] = useState(false);
+
+  // const mapRef = useRef();
 
   const [address, setAddress] = useState("");
   const [viewPosition, setViewPosition] = useState(seoulCityHallCoordinates);
-  const { data, error: queryError } = useQuery({
-    queryKey: ["campingSites", { keyword, position }],
-    queryFn: async () => {
-      try {
-        const data = keyword
-          ? await campsiteApi.getListWithKeyword(keyword)
-          : await campsiteApi.getListWithLocation({ mapX: position.lng, mapY: position.lat });
 
-        if (data) {
-          return data
-            .map((item) => ({
-              ...item,
-              distance: parseFloat(
-                haversineDistance(position, { lat: parseFloat(item.mapY), lng: parseFloat(item.mapX) }),
-              ),
-            }))
-            .sort((a, b) => a.distance - b.distance);
-        }
+  const { data, queryError } = useCampsitesQuery(position);
+  // const { data, error: queryError } = useQuery({
+  //   queryKey: ["campingSites", { keyword, position }],
+  //   queryFn: async () => {
+  //     try {
+  //       const data = keyword
+  //         ? await campsiteApi.getListWithKeyword(keyword)
+  //         : await campsiteApi.getListWithLocation({ mapX: position.lng, mapY: position.lat });
 
-        return [];
-      } catch (e) {
-        console.error(e);
-        return [];
-      }
-    },
-    enabled: !!position.lat && !!position.lng,
-  });
+  //       if (data) {
+  //         return data
+  //           .map((item) => ({
+  //             ...item,
+  //             distance: parseFloat(
+  //               haversineDistance(position, { lat: parseFloat(item.mapY), lng: parseFloat(item.mapX) }),
+  //             ),
+  //           }))
+  //           .sort((a, b) => a.distance - b.distance);
+  //       }
+
+  //       return [];
+  //     } catch (e) {
+  //       console.error(e);
+  //       return [];
+  //     }
+  //   },
+  //   enabled: !!position.lat && !!position.lng,
+  // });
 
   const handleToggleSideBar = () => {
+    setShowList(true);
     isSideBarOpened ? closeSideBar() : openSideBar();
   };
 
@@ -75,7 +89,7 @@ const MapContainer = ({ onClick }) => {
         },
         (error) => {
           console.error(error);
-          setPosition(seoulCityHallCoordinates);
+          resetPosition();
           setKeyword("");
         },
       );
@@ -123,7 +137,7 @@ const MapContainer = ({ onClick }) => {
     }
     const geocoder = new window.kakao.maps.services.Geocoder();
     const coord = new window.kakao.maps.LatLng(lat, lng);
-    geocoder.coord2Address(coord.getLng(), coord.getLat(), (result, status) => {
+    geocoder.coord2Address(coord?.getLng(), coord?.getLat(), (result, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
         setAddress(result[0].address.address_name);
       } else {
@@ -133,31 +147,30 @@ const MapContainer = ({ onClick }) => {
     });
   };
 
-  const handleMarkerClick = (site) => {
-    setSelectedItem(site);
-    setShowPopup(true);
-    setShowList(true);
-    onClick(site);
-    openSideBar();
+  // const handleMarkerClick = (site) => {
+  //   onClick(site);
+  //   openSideBar();
 
-    if (mapRef.current) {
-      const { kakao } = window;
-      if (kakao && kakao.maps) {
-        const offsetY = 0.005;
-        mapRef.current.setCenter(new kakao.maps.LatLng(parseFloat(site.mapY) - offsetY, parseFloat(site.mapX)));
-        mapRef.current.setLevel(6);
-      }
-    }
-  };
+  //   if (mapRef.current) {
+  //     console.log(mapRef.current);
+  //     const { kakao } = window;
+  //     if (kakao && kakao.maps) {
+  //       const offsetY = 0.005;
+  //       mapRef.current.setCenter(new kakao.maps.LatLng(parseFloat(site.mapY) - offsetY, parseFloat(site.mapX)));
+  //       mapRef.current.setLevel(6);
+  //     }
+  //   }
+  // };
 
   if (kakaoError || queryError) return <div>Error loading data: {kakaoError?.message || queryError?.message}</div>;
 
   return (
     <Wrapper>
+      {/* <CampSiteList data={data} handleMarkerClick={handleMarkerClick} showList={showList} setShowList={setShowList} /> */}
+
       <SideBarToggleBtn isSideBarOpened={isSideBarOpened} onClick={handleToggleSideBar} />
       <ResetBtn onClick={handleReset}>이건우리집으로돌아가는버튼</ResetBtn>
       <div className="container">
-        <CampSiteList data={data} handleMarkerClick={handleMarkerClick} showList={showList} setShowList={setShowList} />
         <div className="map">
           <Map
             id="map"
@@ -172,7 +185,7 @@ const MapContainer = ({ onClick }) => {
             level={6}
             onDragEnd={handleDragEnd}
             onZoomChanged={handleZoomChanged}
-            ref={mapRef}
+            ref={ref}
           >
             <MapMarker
               position={{
@@ -190,7 +203,7 @@ const MapContainer = ({ onClick }) => {
             />
             {data?.map((site, index) => (
               <MapMarker
-                onClick={() => handleMarkerClick(site)}
+                onClick={() => onClick(site)}
                 image={{
                   src: campsiteMarker,
                   size: {
@@ -205,12 +218,12 @@ const MapContainer = ({ onClick }) => {
                 }}
                 title={site.facltNm}
               >
-                {showPopup && selectedItem?.contentId === site.contentId && (
+                {showPopup && selectedSite?.contentId === site.contentId && (
                   <Popup>
-                    <h2>{selectedItem.facltNm}</h2>
-                    <p>{selectedItem.addr1}</p>
-                    <p>{selectedItem.tel}</p>
-                    <p>거리: {selectedItem.distance} km</p>
+                    <h2>{selectedSite.facltNm}</h2>
+                    <p>{selectedSite.addr1}</p>
+                    <p>{selectedSite.tel}</p>
+                    <p>거리: {selectedSite.distance} km</p>
                     <button onClick={() => setShowPopup(false)}>닫기</button>
                   </Popup>
                 )}

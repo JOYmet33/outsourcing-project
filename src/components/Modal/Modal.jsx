@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { addReview } from "../../lib/api/review.js";
+import { useState, useEffect } from "react";
 import supabase from "../../supabaseClient.js";
 import {
   ButtonModalClose,
@@ -14,10 +13,12 @@ import {
   ModalSubmitButton,
   ModalTextarea,
 } from "./Modal.styled.jsx";
+import { uploadImage } from "../../lib/api/upLoadImage.js";
 
 const Modal = ({ isOpen, closeModal }) => {
-  const [formData, setFormData] = useState({ link: "", content: "", image: null });
-  const [errors, setErrors] = useState({ link: "", content: "", image: "" });
+  const [content, setContent] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [error, setError] = useState("");
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -32,82 +33,85 @@ const Modal = ({ isOpen, closeModal }) => {
 
   if (!isOpen) return null;
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
-    });
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImageFile(file);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { content, image } = formData;
+    setError("");
 
-    // fomData가 존재 하는지??
-    // formData 를 어떤 형태로 업로드 할것인지?
-
-    let errorMessages = {};
-    if (!content) errorMessages.content = "내용을 입력해주세요.";
-    if (!image) errorMessages.image = "이미지를 업로드해주세요.";
-
-    if (Object.keys(errorMessages).length) {
-      setErrors(errorMessages);
+    if (!content || !imageFile) {
+      setError("내용과 이미지를 모두 입력해주세요.");
       return;
     }
 
-    // 파일 이름 안전하게 변환
-    let safeFileName = image.name.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9_\-\.]/g, "");
-    let imageUrl = "";
-    if (image) {
-      const { data, error } = await supabase.storage.from("camparoo").upload(`review/${safeFileName}`, image);
+    const path = await uploadImage(imageFile);
 
-      if (error) {
-        console.error("이미지 업로드 오류:", error);
-        return;
-      }
-
-      const { publicURL, error: urlError } = supabase.storage.from("camparoo").getPublicUrl(`review/${safeFileName}`);
-
-      if (urlError) {
-        console.error("이미지 URL 생성 오류:", urlError);
-        return;
-      }
-
-      imageUrl = publicURL;
+    if (!path) {
+      setError("이미지 업로드에 실패했습니다.");
+      return;
     }
 
-    // 리뷰를 Supabase에 삽입
-    const newReview = { content, image_url: imageUrl, user_id: user.id };
-    const result = await addReview(newReview);
+    const imageUrl = `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/camparoo/${path}`;
 
-    if (result) {
-      closeModal();
+    // 사용자 정보에서 닉네임을 가져옴
+    const { data: userData, error: userError } = await supabase
+      .from("users")
+      .select("nickname")
+      .eq("id", user.id)
+      .single();
+
+    if (userError) {
+      console.error("사용자 정보 가져오기 오류:", userError);
+      setError("사용자 정보를 가져오는 데 실패했습니다.");
+      return;
     }
+
+    const newReview = {
+      content,
+      image: imageUrl,
+      user_id: user.id,
+      // nickname: userData.nickname,  // 사용자 닉네임 추가
+    };
+
+    const { data, error: insertError } = await supabase
+      .from("review")
+      .insert(newReview);
+
+    if (insertError) {
+      console.error("리뷰 저장 오류:", insertError);
+      setError("리뷰 저장에 실패했습니다.");
+      return;
+    }
+
+    closeModal();
   };
+
 
   return (
     <Container>
       <ModalContainer>
         <ButtonModalClose onClick={closeModal}>X</ButtonModalClose>
-        <div>
-          <ModalContent>
-            <ContentInner>
-              <ModalForm onSubmit={handleSubmit}>
-                <ModalTextarea
-                  placeholder="내용을 입력해주세요."
-                  name="content"
-                  value={formData.content}
-                  onChange={handleChange}
-                />
-                {errors.content && <ErrorMessage>{errors.content}</ErrorMessage>}
-                <ModalFileInput type="file" name="image" accept="image/*" onChange={handleChange} />
-                {errors.image && <ErrorMessage>{errors.image}</ErrorMessage>}
-                <ModalSubmitButton type="submit">등록하기</ModalSubmitButton>
-              </ModalForm>
-            </ContentInner>
-          </ModalContent>
-        </div>
+        <ModalContent>
+          <ContentInner>
+            <ModalForm onSubmit={handleSubmit}>
+              <ModalTextarea
+                placeholder="내용을 입력해주세요."
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+              />
+              {error && <ErrorMessage>{error}</ErrorMessage>}
+              <ModalFileInput
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              <ModalSubmitButton type="submit">등록하기</ModalSubmitButton>
+            </ModalForm>
+          </ContentInner>
+        </ModalContent>
         <ModalScreen onClick={closeModal} />
       </ModalContainer>
     </Container>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, SearchButton, SearchInput } from "./SearchContainer.styled";
-import useCampsiteStore from "../../../../store/campsiteStore";
+import useCampsiteStore from "../../../store/campsiteStore";
 
 const SearchContainer = () => {
   const [text, setText] = useState("");

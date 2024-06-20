@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { ListWrapper } from "./CampSiteList.styled";
 
 const ListItem = ({ item, index, onClick }) => (
@@ -14,17 +13,16 @@ const ListItem = ({ item, index, onClick }) => (
 
 const CampSiteList = ({ data, handleMarkerClick, showList, setShowList }) => {
   return (
-    <>
-      <button onClick={() => setShowList(!showList)}>{showList ? "ⲷ" : "Ⲷ"}</button>
+    <ListWrapper>
       {showList && (
-        <ListWrapper>
+        <div>
           <h1>근처 캠핑장</h1>
           {data.map((item, index) => (
             <ListItem key={item.contentId} item={item} index={index} onClick={handleMarkerClick} />
           ))}
-        </ListWrapper>
+        </div>
       )}
-    </>
+    </ListWrapper>
   );
 };
 
