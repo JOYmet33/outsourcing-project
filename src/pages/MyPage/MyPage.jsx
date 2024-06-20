@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../../components/Header/Header";
 import supabase from "../../supabaseClient";
+import MyPageModal from "./MyPageModal";
+import useModal from "../../hooks/useModal.js";
 
 const PageContainer = styled.div`
   padding: 20px;
@@ -82,6 +84,7 @@ const Mypage = () => {
   const [userReviews, setUserReviews] = useState([]);
   const [profileImage, setProfileImage] = useState("");
   const [userImgSave, setUserImgSave] = useState(null);
+  const { isOpen, openModal, closeModal, modalContent } = useModal();
 
   const userId = "d5e63f18-6baa-4498-a9f0-6722a4d0abd9";
   useEffect(() => {
@@ -200,7 +203,10 @@ const Mypage = () => {
           <ReviewItem key={review.id}>
             <div>{review.content}</div>
             <div>
-              <EditButton>수정</EditButton>
+              <EditButton onClick={() => openModal(<div>리뷰탭</div>)}>수정</EditButton>
+              <MyPageModal isOpen={isOpen} closeModal={closeModal}>
+                {modalContent}
+              </MyPageModal>
               <DeleteButton>삭제</DeleteButton>
             </div>
           </ReviewItem>
