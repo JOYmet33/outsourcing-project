@@ -29,11 +29,7 @@ const MapContainer = ({ onClick }) => {
   const [address, setAddress] = useState("");
   const [viewPosition, setViewPosition] = useState(seoulCityHallCoordinates);
 
-  const {
-    data,
-    error: queryError,
-    isLoading,
-  } = useQuery({
+  const { data, error: queryError } = useQuery({
     queryKey: ["campingSites", { keyword, position }],
     queryFn: async () => {
       try {
@@ -66,9 +62,6 @@ const MapContainer = ({ onClick }) => {
   };
 
   const handleReset = () => {
-    if (!window.kakao || !window.kakao.maps) {
-      return;
-    }
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
@@ -151,7 +144,6 @@ const MapContainer = ({ onClick }) => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
   if (kakaoError || queryError) return <div>Error loading data: {kakaoError?.message || queryError?.message}</div>;
 
   return (
