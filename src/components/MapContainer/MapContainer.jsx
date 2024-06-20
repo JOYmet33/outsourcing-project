@@ -9,6 +9,7 @@ import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
 
 const API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
+
 const MapContainer = ({ onClick }) => {
   const keyword = useCampsiteStore((state) => state.keyword);
   const setKeyword = useCampsiteStore((state) => state.setKeyword);
@@ -57,6 +58,8 @@ const MapContainer = ({ onClick }) => {
         },
         (error) => {
           console.error(error);
+          setPosition(seoulCityHallCoordinates);
+          setKeyword();
         },
       );
     } else {
