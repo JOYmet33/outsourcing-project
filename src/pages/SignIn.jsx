@@ -21,10 +21,8 @@ const SignIn = () => {
   };
 
   const handleSignIn = async () => {
-    // 유효성 검사
     if (!email) {
       alert("이메일 주소를 채워주세요.");
-
       return;
     }
     if (!validateEmail(email)) {
@@ -47,16 +45,16 @@ const SignIn = () => {
         email: email,
         password: password,
       });
-      // 유저 일치 여부
-      if (data.user) {
-        const user_nickname = data.user.user_metadata.nickname;
-        alert(`${user_nickname}님 환영합니다.`);
-        navigate("/");
-      } else {
+      if (!data.user) {
+        console.log(error);
         alert("회원정보가 일치하지 않습니다.");
         setEmail("");
         setPassword("");
         return;
+      } else {
+        const user_nickname = data.user.user_metadata.nickname;
+        alert(`${user_nickname}님 환영합니다.`);
+        navigate("/");
       }
     } catch (error) {
       console.log(error);

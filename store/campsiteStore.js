@@ -6,6 +6,8 @@ const useCampsiteStore = create((set) => ({
   isSideBarOpened: false,
   openSideBar: () => set({ isSideBarOpened: true }),
   closeSideBar: () => set({ isSideBarOpened: false }),
+  selectedSite: null,
+  setSelectedSite: (site) => set({ selectedSite: site }),
 }));
 
 export default useCampsiteStore;

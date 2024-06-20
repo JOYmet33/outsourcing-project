@@ -23,7 +23,9 @@ const Modal = ({ isOpen, closeModal }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setUser(user);
     };
     getUser();
