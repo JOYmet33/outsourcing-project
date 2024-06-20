@@ -17,6 +17,7 @@ const SignUp = () => {
   };
 
   const handleSignUp = async (e) => {
+    // 유효성 검사
     if (!email) {
       alert("이메일 주소를 입력해주세요.");
       return;
@@ -55,6 +56,8 @@ const SignUp = () => {
     }
 
     e.preventDefault();
+
+    // Authentication API
     const { data, error } = await supabase.auth.signUp({
       email: email,
       password: password,
@@ -62,17 +65,21 @@ const SignUp = () => {
         data: { nickname },
       },
     });
-    console.log("Auth >>", data);
+    if (data) {
+      console.log("Auth data >>", data); // **베포 전 삭제해야 함 **
+    } else {
+      console.log(error);
+    }
+    // 'users' Table API
     try {
       const { data, error } = await supabase
         .from("users")
         .insert([{ email: email, nickname: nickname }])
         .select();
-      console.log("Camparoo >>", data);
+      console.log("Camparoo data >>", data); // **베포 전 삭제해야 함 **
       if (data) {
         const user_nickname = data[0].nickname;
         alert(`${user_nickname}님 가입을 축하합니다.`);
-        // alert(`${nickname}님 가입을 축하합니다.`);
         navigate("/sign_in");
       } else {
         console.log(error);
