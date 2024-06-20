@@ -15,7 +15,7 @@ import {
 } from "./Modal.styled.jsx";
 import { uploadImage } from "../../lib/api/upLoadImage.js";
 
-const Modal = ({ isOpen, closeModal }) => {
+const Modal = ({ isOpen, closeModal ,campsiteId}) => {
   const [content, setContent] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState("");
@@ -73,6 +73,7 @@ const Modal = ({ isOpen, closeModal }) => {
       content,
       image: imageUrl,
       user_id: user.id,
+      campsite_id: campsiteId,
       // nickname: userData.nickname,  // 사용자 닉네임 추가
     };
 
