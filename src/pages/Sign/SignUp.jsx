@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { SignContainer, SignH1, SignForm, SignInput, SignButton } from "../components/SignIn/SgnIn.styled";
+import { SignContainer, SignH1, SignForm, SignInput, SignButton } from "../Sign/Sign.styled";
 import { Link, useNavigate } from "react-router-dom";
-import supabase from "../supabaseClient";
+import supabase from "../../supabaseClient";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -65,10 +65,6 @@ const SignUp = () => {
         data: { nickname },
       },
     });
-    if (data) {
-    } else {
-      console.log(error);
-    }
     // 'users' Table API
     try {
       const { data, error } = await supabase
