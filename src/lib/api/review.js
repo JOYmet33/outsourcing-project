@@ -1,7 +1,10 @@
 import supabase from "../../supabaseClient.js";
 
 export const getReview = async () => {
-  const {data, error} = await supabase.from('review').select();
+  const {data, error} = await supabase.from('review').select(`
+      *,
+      users!inner(nickname)
+    `);
   if(error) {
     console.log('@@ error', error)
   }
