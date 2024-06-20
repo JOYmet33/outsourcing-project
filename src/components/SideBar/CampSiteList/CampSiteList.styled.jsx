@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const ListWrapper = styled.div`
-  width: 20%;
+  width: 450px;
   overflow-y: auto;
   padding: 10px;
   background-color: #f8f9fa;

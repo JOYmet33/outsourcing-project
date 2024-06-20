@@ -1,31 +1,29 @@
-import React, { useState } from "react";
+import React, { memo, useCallback } from "react";
 import { ListWrapper } from "./CampSiteList.styled";
+import ListItem from "./ListItem"; // ListItem 컴포넌트를 import
 
-const ListItem = ({ item, index, onClick }) => (
-  <div className="list-item" onClick={() => onClick(item)}>
-    <h2>
-      {index + 1}. {item.facltNm}
-    </h2>
-    <p>{item.addr1}</p>
-    <p>{item.tel}</p>
-    <p>거리: {item.distance} km</p>
-  </div>
-);
+const CampSiteList = ({ data = [], handleMarkerClick, showList, setShowList }) => {
+  const handleClick = useCallback(() => {
+    setShowList((prevShowList) => !prevShowList);
+  }, [setShowList]);
 
-const CampSiteList = ({ data, handleMarkerClick, showList, setShowList }) => {
   return (
     <>
-      <button onClick={() => setShowList(!showList)}>{showList ? "ⲷ" : "Ⲷ"}</button>
+      <button onClick={handleClick}>{showList ? "접기" : "펼치기"}</button>
       {showList && (
         <ListWrapper>
           <h1>근처 캠핑장</h1>
-          {data.map((item, index) => (
-            <ListItem key={item.contentId} item={item} index={index} onClick={handleMarkerClick} />
-          ))}
+          {data.length > 0 ? (
+            data.map((item, index) => (
+              <ListItem key={item.contentId} item={item} index={index} onClick={handleMarkerClick} />
+            ))
+          ) : (
+            <p>캠핑장 데이터를 불러올 수 없습니다.</p>
+          )}
         </ListWrapper>
       )}
     </>
   );
 };
 
-export default CampSiteList;
+export default memo(CampSiteList);

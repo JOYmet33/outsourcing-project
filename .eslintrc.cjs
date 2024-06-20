@@ -16,5 +16,6 @@ module.exports = {
     "react/jsx-no-target-blank": "off",
     "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     "react/jsx-no-duplicate-props": "off",
+    "react/display-name": "off",
   },
 };
