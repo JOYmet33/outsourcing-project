@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const ListWrapper = styled.div`
   width: auto;
   overflow-y: auto;
-  padding-left: 14px;
+  padding: 0 14px;
   background-color: var(--color-white-dark);
   border-right: 1px solid #dee2e6;
 
