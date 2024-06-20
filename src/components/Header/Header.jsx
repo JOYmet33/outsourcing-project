@@ -12,24 +12,6 @@ const Header = () => {
   const navigate = useNavigate();
   const { isSignIn, setSignIn, setSignOut } = useUserStore((state) => state);
 
-  const handleSignIn = () => {
-    navigate("/sign_in");
-  };
-
-  const handleSignOut = () => {
-    async function signOut() {
-      const { error } = await supabase.auth.signOut();
-      setSignOut();
-      setUserName("");
-      setUserImage("");
-    }
-    signOut();
-  };
-
-  const moveToMyPage = () => {
-    navigate("/mypage");
-  };
-
   useEffect(() => {
     const checkSignIn = async () => {
       const { data } = await supabase.auth.getSession();
@@ -40,6 +22,10 @@ const Header = () => {
       }
     };
     checkSignIn();
+  }, []);
+
+  useEffect(() => {
+    checkLogin();
   }, []);
 
   const checkLogin = async () => {
@@ -58,9 +44,23 @@ const Header = () => {
     }
   };
 
-  useEffect(() => {
-    checkLogin();
-  }, []);
+  const handleSignIn = () => {
+    navigate("/sign_in");
+  };
+
+  const handleSignOut = () => {
+    const signOut = async () => {
+      await supabase.auth.signOut();
+      setSignOut();
+      setUserName("");
+      setUserImage("");
+    };
+    signOut();
+  };
+
+  const moveToMyPage = () => {
+    navigate("/mypage");
+  };
 
   return (
     <HeaderBar>
