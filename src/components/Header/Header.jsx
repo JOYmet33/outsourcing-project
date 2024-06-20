@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useUserStore from "../../../store/userStore";
+import useUserStore from "../../store/userStore";
 import supabase from "../../supabaseClient";
 import { IconMyPage } from "../Icon/Icons/IconMyPage";
 import { Button, ButtonContainer, HeaderBar, HeaderLink, IconContainer, Img, LogoContainer } from "./Header.styled";
