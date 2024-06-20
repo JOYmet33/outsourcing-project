@@ -1,9 +1,18 @@
 import supabase from "../../supabaseClient.js";
 
 export const getReview = async () => {
+<<<<<<< feature/sora
+  const {data, error} = await supabase.from('review').select(`
+      *,
+      users!inner(nickname)
+    `);
+  if(error) {
+    console.log('@@ error', error)
+=======
   const { data, error } = await supabase.from("review").select();
   if (error) {
     console.log("@@ error", error);
+>>>>>>> dev
   }
   return data;
 };
