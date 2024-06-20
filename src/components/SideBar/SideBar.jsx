@@ -17,7 +17,7 @@ const sideBarComponents = {
 
 const initialState = SIDE_BAR_TABS[0];
 
-const SideBar = ({ position, onClick, showList, setShowList }) => {
+const SideBar = ({ position, onClick }) => {
   const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
   const selectedSite = useCampsiteStore((state) => state.selectedSite);
   const [activeTab, setActiveTab] = useState(initialState);
@@ -39,7 +39,7 @@ const SideBar = ({ position, onClick, showList, setShowList }) => {
             onClick={handleTapClick}
           />
         )}
-        <CampSiteList data={data} handleMarkerClick={onClick} showList={showList} setShowList={setShowList} />
+        <CampSiteList data={data} handleMarkerClick={onClick} />
       </Wrapper>
     );
 };

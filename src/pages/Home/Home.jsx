@@ -16,7 +16,6 @@ const Home = () => {
   const handleMarkerClick = (site) => {
     setSelectedSite(site);
     setShowPopup(true);
-    setShowList(true);
     openSideBar();
 
     if (mapRef.current) {
@@ -33,23 +32,20 @@ const Home = () => {
   const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
   const [position, setPosition] = useState(seoulCityHallCoordinates);
 
-  const [showList, setShowList] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
   const resetPosition = () => setPosition(seoulCityHallCoordinates);
 
   return (
     <Wrapper>
-      <SideBar position={position} onClick={handleMarkerClick} showList={showList} setShowList={setShowList} />
+      <SideBar position={position} onClick={handleMarkerClick} />
       <MapContainer
         kakaoError={kakaoError}
         onClick={handleMarkerClick}
         position={position}
         setPosition={setPosition}
         resetPosition={resetPosition}
-        showList={showList}
         showPopup={showPopup}
-        setShowList={setShowList}
         setShowPopup={setShowPopup}
       />
     </Wrapper>

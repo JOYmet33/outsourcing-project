@@ -11,17 +11,15 @@ const ListItem = ({ item, index, onClick }) => (
   </div>
 );
 
-const CampSiteList = ({ data, handleMarkerClick, showList, setShowList }) => {
+const CampSiteList = ({ data, handleMarkerClick }) => {
   return (
     <ListWrapper>
-      {showList && (
-        <div>
-          <h1>근처 캠핑장</h1>
-          {data.map((item, index) => (
-            <ListItem key={item.contentId} item={item} index={index} onClick={handleMarkerClick} />
-          ))}
-        </div>
-      )}
+      <div>
+        <h1>근처 캠핑장</h1>
+        {data?.map((item, index) => (
+          <ListItem key={item.contentId} item={item} index={index} onClick={handleMarkerClick} />
+        ))}
+      </div>
     </ListWrapper>
   );
 };

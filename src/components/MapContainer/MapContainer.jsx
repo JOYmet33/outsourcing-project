@@ -12,21 +12,22 @@ import Popup from "./Popup/Popup";
 const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
 
 const MapContainer = forwardRef(
-  ({ onClick, position, setPosition, resetPosition, showPopup, setShowPopup, setShowList, kakaoError }, ref) => {
+  ({ onClick, position, setPosition, resetPosition, showPopup, setShowPopup, kakaoError }, ref) => {
     console.log(position);
     const setKeyword = useCampsiteStore((state) => state.setKeyword);
 
     const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
     const openSideBar = useCampsiteStore((state) => state.openSideBar);
     const closeSideBar = useCampsiteStore((state) => state.closeSideBar);
+
     const selectedSite = useCampsiteStore((state) => state.selectedSite);
+
     const [address, setAddress] = useState("");
     const [viewPosition, setViewPosition] = useState(seoulCityHallCoordinates);
 
     const { data, queryError } = useCampsitesQuery(position);
 
     const handleToggleSideBar = () => {
-      setShowList(true);
       isSideBarOpened ? closeSideBar() : openSideBar();
     };
 
@@ -53,17 +54,6 @@ const MapContainer = forwardRef(
         console.error("이 브라우저에서는 Geolocation 이 지원되지 않습니다.");
       }
     };
-
-    useEffect(() => {
-      if (!window.kakao || !window.kakao.maps) {
-        return;
-      }
-      handleReset();
-    }, [window.kakao]);
-
-    useEffect(() => {
-      fetchAddress(viewPosition.lat, viewPosition.lng);
-    }, [viewPosition]);
 
     const handleDragEnd = (map) => {
       const center = map.getCenter();
@@ -98,6 +88,17 @@ const MapContainer = forwardRef(
         }
       });
     };
+
+    useEffect(() => {
+      if (!window.kakao || !window.kakao.maps) {
+        return;
+      }
+      handleReset();
+    }, [window.kakao]);
+
+    useEffect(() => {
+      fetchAddress(viewPosition.lat, viewPosition.lng);
+    }, [viewPosition]);
 
     if (kakaoError || queryError) return <div>Error loading data: {kakaoError?.message || queryError?.message}</div>;
 
