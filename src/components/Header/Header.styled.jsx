@@ -27,6 +27,7 @@ export const HeaderLink = styled(Link)`
 
 export const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   color: var(--color-gray-dark);
@@ -43,4 +44,15 @@ export const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
+`;
+
+export const IconContainer = styled.div`
+  margin: 0px;
+  padding: 0px;
+  cursor: pointer;
+  height: 39px; /* 아이콘의 세로 크기 */
+  svg {
+    height: 100%;
+    width: auto; /* 비율을 유지하면서 크기 조정 */
+  }
 `;
