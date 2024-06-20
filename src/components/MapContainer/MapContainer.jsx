@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
-import useCampsiteStore from "../../../store/campsiteStore";
+import useCampsiteStore from "../../store/campsiteStore";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
 import campsiteApi from "../../lib/api/campsite.api";
 import { haversineDistance } from "../../utils/distance";
@@ -157,7 +157,6 @@ const MapContainer = ({ onClick }) => {
       <SideBarToggleBtn isSideBarOpened={isSideBarOpened} onClick={handleToggleSideBar} />
       <ResetBtn onClick={handleReset}>이건우리집으로돌아가는버튼</ResetBtn>
       <div className="container">
-        <CampSiteList data={data} handleMarkerClick={handleMarkerClick} showList={showList} setShowList={setShowList} />
         <div className="map">
           <Map
             id="map"

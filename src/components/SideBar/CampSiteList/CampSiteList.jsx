@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { ListWrapper } from "./CampSiteList.styled";
 
 const ListItem = ({ item, index, onClick }) => (

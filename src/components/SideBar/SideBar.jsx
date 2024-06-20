@@ -4,7 +4,7 @@ import SideBarHome from "./SideBarHome/SideBarHome";
 import SideBarReviews from "./SideBarReviews/SideBarReviews";
 import SideBarAmenities from "./SideBarAmenities/SideBarAmenities";
 import { Wrapper } from "./SideBar.styled";
-import useCampsiteStore from "../../../store/campsiteStore";
+import useCampsiteStore from "../../store/campsiteStore";
 import CampSiteDetail from "./CampSiteDetail/CampSiteDetail";
 import CampSiteList from "./CampSiteList/CampSiteList";
 
