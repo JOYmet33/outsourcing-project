@@ -62,14 +62,22 @@ const SignUp = () => {
         data: { nickname },
       },
     });
+    console.log("Auth >>", data);
     try {
-      await supabase
+      const { data, error } = await supabase
         .from("users")
         .insert([{ email: email, nickname: nickname }])
         .select();
-      const user_nickname = data[0].nickname;
-      alert(`${user_nickname}님 가입을 축하합니다.`);
-      navigate("/sign_in");
+      console.log("Camparoo >>", data);
+      if (data) {
+        const user_nickname = data[0].nickname;
+        alert(`${user_nickname}님 가입을 축하합니다.`);
+        // alert(`${nickname}님 가입을 축하합니다.`);
+        navigate("/sign_in");
+      } else {
+        console.log(error);
+        return;
+      }
     } catch (error) {
       console.log(error);
     }
