@@ -7,6 +7,7 @@ import { Wrapper } from "./SideBar.styled";
 import useCampsiteStore from "../../store/campsiteStore";
 import CampSiteDetail from "./CampSiteDetail/CampSiteDetail";
 import CampSiteList from "./CampSiteList/CampSiteList";
+import useCampsitesQuery from "../../hooks/useCampsitesQuery";
 
 const sideBarComponents = {
   SideBarHome,
@@ -16,13 +17,14 @@ const sideBarComponents = {
 
 const initialState = SIDE_BAR_TABS[0];
 
-const SideBar = () => {
+const SideBar = ({ position }) => {
   const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
   const selectedSite = useCampsiteStore((state) => state.selectedSite);
   const [activeTab, setActiveTab] = useState(initialState);
   const handleTapClick = (tap) => {
     setActiveTab(tap);
   };
+  const { data, queryError } = useCampsitesQuery(position);
 
   const ActiveComponent = sideBarComponents[`SideBar${activeTab}`];
   if (isSideBarOpened)
@@ -36,7 +38,7 @@ const SideBar = () => {
             onClick={handleTapClick}
           />
         )}
-        <CampSiteList />
+        {/* <CampSiteList data={data} handleMarkerClick={handleMarkerClick} showList={showList} setShowList={setShowList} /> */}
       </Wrapper>
     );
 };

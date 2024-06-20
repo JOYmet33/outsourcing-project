@@ -4,17 +4,17 @@ import { Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
 import useCampsiteStore from "../../store/campsiteStore";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
 import campsiteApi from "../../lib/api/campsite.api";
-import { haversineDistance } from "../../utils/distance";
 import { DisPlayAddress, Popup, ResetBtn, Wrapper } from "./MapContainer.styled";
 import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
+import CampSiteList from "../SideBar/CampSiteList/CampSiteList";
+import useCampsitesQuery from "../../hooks/useCampsitesQuery";
 
 const API_KEY = import.meta.env.VITE_KAKAO_MAP_API_KEY;
 const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
 
-const MapContainer = ({ onClick }) => {
+const MapContainer = ({ onClick, position, setPosition, resetPosition, showPopup, setShowPopup }) => {
   const { error: kakaoError } = useKakaoLoader({ appkey: API_KEY });
 
-  const keyword = useCampsiteStore((state) => state.keyword);
   const setKeyword = useCampsiteStore((state) => state.setKeyword);
 
   const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
@@ -22,45 +22,43 @@ const MapContainer = ({ onClick }) => {
   const closeSideBar = useCampsiteStore((state) => state.closeSideBar);
 
   const selectedSite = useCampsiteStore((state) => state.selectedSite);
-  const setSelectedSite = useCampsiteStore((state) => state.setSelectedSite);
 
-  const [position, setPosition] = useState(seoulCityHallCoordinates);
-
-  const [showList, setShowList] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+  // const [showList, setShowList] = useState(false);
+  // const [showPopup, setShowPopup] = useState(false);
 
   const mapRef = useRef();
 
   const [address, setAddress] = useState("");
   const [viewPosition, setViewPosition] = useState(seoulCityHallCoordinates);
 
-  const { data, error: queryError } = useQuery({
-    queryKey: ["campingSites", { keyword, position }],
-    queryFn: async () => {
-      try {
-        const data = keyword
-          ? await campsiteApi.getListWithKeyword(keyword)
-          : await campsiteApi.getListWithLocation({ mapX: position.lng, mapY: position.lat });
+  const { data, queryError } = useCampsitesQuery(position);
+  // const { data, error: queryError } = useQuery({
+  //   queryKey: ["campingSites", { keyword, position }],
+  //   queryFn: async () => {
+  //     try {
+  //       const data = keyword
+  //         ? await campsiteApi.getListWithKeyword(keyword)
+  //         : await campsiteApi.getListWithLocation({ mapX: position.lng, mapY: position.lat });
 
-        if (data) {
-          return data
-            .map((item) => ({
-              ...item,
-              distance: parseFloat(
-                haversineDistance(position, { lat: parseFloat(item.mapY), lng: parseFloat(item.mapX) }),
-              ),
-            }))
-            .sort((a, b) => a.distance - b.distance);
-        }
+  //       if (data) {
+  //         return data
+  //           .map((item) => ({
+  //             ...item,
+  //             distance: parseFloat(
+  //               haversineDistance(position, { lat: parseFloat(item.mapY), lng: parseFloat(item.mapX) }),
+  //             ),
+  //           }))
+  //           .sort((a, b) => a.distance - b.distance);
+  //       }
 
-        return [];
-      } catch (e) {
-        console.error(e);
-        return [];
-      }
-    },
-    enabled: !!position.lat && !!position.lng,
-  });
+  //       return [];
+  //     } catch (e) {
+  //       console.error(e);
+  //       return [];
+  //     }
+  //   },
+  //   enabled: !!position.lat && !!position.lng,
+  // });
 
   const handleToggleSideBar = () => {
     isSideBarOpened ? closeSideBar() : openSideBar();
@@ -81,7 +79,7 @@ const MapContainer = ({ onClick }) => {
         },
         (error) => {
           console.error(error);
-          setPosition(seoulCityHallCoordinates);
+          resetPosition();
           setKeyword("");
         },
       );
@@ -129,7 +127,7 @@ const MapContainer = ({ onClick }) => {
     }
     const geocoder = new window.kakao.maps.services.Geocoder();
     const coord = new window.kakao.maps.LatLng(lat, lng);
-    geocoder.coord2Address(coord.getLng(), coord.getLat(), (result, status) => {
+    geocoder.coord2Address(coord?.getLng(), coord?.getLat(), (result, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
         setAddress(result[0].address.address_name);
       } else {
@@ -140,9 +138,6 @@ const MapContainer = ({ onClick }) => {
   };
 
   const handleMarkerClick = (site) => {
-    setSelectedSite(site);
-    setShowPopup(true);
-    setShowList(true);
     onClick(site);
     openSideBar();
 
@@ -160,6 +155,8 @@ const MapContainer = ({ onClick }) => {
 
   return (
     <Wrapper>
+      {/* <CampSiteList data={data} handleMarkerClick={handleMarkerClick} showList={showList} setShowList={setShowList} /> */}
+
       <SideBarToggleBtn isSideBarOpened={isSideBarOpened} onClick={handleToggleSideBar} />
       <ResetBtn onClick={handleReset}>이건우리집으로돌아가는버튼</ResetBtn>
       <div className="container">
