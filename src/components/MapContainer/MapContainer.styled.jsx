@@ -5,18 +5,6 @@ export const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
-
-  .container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 100%;
-  }
-
-  .map {
-    width: 100%;
-    position: relative;
-  }
 `;
 
 export const DisPlayAddress = styled.div`
@@ -29,7 +17,19 @@ export const DisPlayAddress = styled.div`
 `;
 
 export const ResetBtn = styled.button`
-  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  font-size: 1rem;
+  right: 10px;
+  top: 10px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-light);
+  border-radius: 6px;
   position: absolute;
   z-index: 9;
+  cursor: pointer;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 `;

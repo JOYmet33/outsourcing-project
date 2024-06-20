@@ -1,9 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
 import { forwardRef, useEffect, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import useCampsiteStore from "../../store/campsiteStore";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
 import userPosition from "../../assets/img/user_position.svg";
+import { FaLocationCrosshairs } from "react-icons/fa6";
 import { DisPlayAddress, ResetBtn, Wrapper } from "./MapContainer.styled";
 import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
 import useCampsitesQuery from "../../hooks/useCampsitesQuery";
@@ -12,8 +12,20 @@ import Popup from "./Popup/Popup";
 const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
 
 const MapContainer = forwardRef(
-  ({ onClick, position, setPosition, resetPosition, showPopup, setShowPopup, kakaoError }, ref) => {
-    console.log(position);
+  (
+    {
+      onClick: handleMarkerClick,
+      position,
+      centerPosition,
+      setPosition,
+      setCenterPosition,
+      resetPosition,
+      showPopup,
+      setShowPopup,
+      kakaoError,
+    },
+    ref,
+  ) => {
     const setKeyword = useCampsiteStore((state) => state.setKeyword);
 
     const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
@@ -39,10 +51,11 @@ const MapContainer = forwardRef(
               lat: pos.coords.latitude,
               lng: pos.coords.longitude,
             };
+            setViewPosition(newPosition);
             setPosition(newPosition);
             setKeyword("");
-            setViewPosition(newPosition);
             fetchAddress(newPosition.lat, newPosition.lng);
+            setCenterPosition(newPosition);
           },
           (error) => {
             console.error(error);
@@ -57,10 +70,12 @@ const MapContainer = forwardRef(
 
     const handleDragEnd = (map) => {
       const center = map.getCenter();
-      setViewPosition({
+      const newPosition = {
         lat: center.getLat(),
         lng: center.getLng(),
-      });
+      };
+      setViewPosition(newPosition);
+      setCenterPosition(newPosition);
       fetchAddress(center.getLat(), center.getLng());
     };
 
@@ -105,64 +120,63 @@ const MapContainer = forwardRef(
     return (
       <Wrapper>
         <SideBarToggleBtn isSideBarOpened={isSideBarOpened} onClick={handleToggleSideBar} />
-        <ResetBtn onClick={handleReset}>이건우리집으로돌아가는버튼</ResetBtn>
-        <div className="container">
-          <div className="map">
-            <Map
-              id="map"
-              center={{
-                lat: position.lat,
-                lng: position.lng,
+        <ResetBtn onClick={handleReset}>
+          <FaLocationCrosshairs />
+        </ResetBtn>
+
+        <Map
+          id="map"
+          center={{
+            lat: centerPosition.lat,
+            lng: centerPosition.lng,
+          }}
+          style={{
+            width: "100%",
+            height: "100%",
+          }}
+          level={6}
+          onDragEnd={handleDragEnd}
+          onZoomChanged={handleZoomChanged}
+          ref={ref}
+        >
+          <MapMarker
+            position={{
+              lat: position.lat,
+              lng: position.lng,
+            }}
+            title="현재 위치"
+            image={{
+              src: userPosition,
+              size: {
+                width: 45,
+                height: 45,
+              },
+            }}
+          />
+          {data?.map((site, index) => (
+            <MapMarker
+              onClick={() => handleMarkerClick(site)}
+              image={{
+                src: campsiteMarker,
+                size: {
+                  width: 35,
+                  height: 35,
+                },
               }}
-              style={{
-                width: "100%",
-                height: "100%",
+              key={index}
+              position={{
+                lat: parseFloat(site.mapY),
+                lng: parseFloat(site.mapX),
               }}
-              level={6}
-              onDragEnd={handleDragEnd}
-              onZoomChanged={handleZoomChanged}
-              ref={ref}
+              title={site.facltNm}
             >
-              <MapMarker
-                position={{
-                  lat: position.lat,
-                  lng: position.lng,
-                }}
-                title="현재 위치"
-                image={{
-                  src: userPosition,
-                  size: {
-                    width: 45,
-                    height: 45,
-                  },
-                }}
-              />
-              {data?.map((site, index) => (
-                <MapMarker
-                  onClick={() => onClick(site)}
-                  image={{
-                    src: campsiteMarker,
-                    size: {
-                      width: 35,
-                      height: 35,
-                    },
-                  }}
-                  key={index}
-                  position={{
-                    lat: parseFloat(site.mapY),
-                    lng: parseFloat(site.mapX),
-                  }}
-                  title={site.facltNm}
-                >
-                  {showPopup && selectedSite?.contentId === site.contentId && (
-                    <Popup setShowPopup={setShowPopup} selectedSite={selectedSite} />
-                  )}
-                </MapMarker>
-              ))}
-              <DisPlayAddress>현재 주소: {address}</DisPlayAddress>
-            </Map>
-          </div>
-        </div>
+              {showPopup && selectedSite?.contentId === site.contentId && (
+                <Popup setShowPopup={setShowPopup} selectedSite={selectedSite} />
+              )}
+            </MapMarker>
+          ))}
+          <DisPlayAddress>현재 주소: {address}</DisPlayAddress>
+        </Map>
       </Wrapper>
     );
   },

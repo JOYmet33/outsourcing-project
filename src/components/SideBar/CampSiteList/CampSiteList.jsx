@@ -1,15 +1,16 @@
+import ListItem from "../ListItem/ListItem";
 import { ListWrapper } from "./CampSiteList.styled";
 
-const ListItem = ({ item, index, onClick }) => (
-  <div className="list-item" onClick={() => onClick(item)}>
-    <h2>
-      {index + 1}. {item.facltNm}
-    </h2>
-    <p>{item.addr1}</p>
-    <p>{item.tel}</p>
-    <p>거리: {item.distance} km</p>
-  </div>
-);
+// const ListItem = ({ item, index, onClick }) => (
+//   <div className="list-item" onClick={() => onClick(item)}>
+//     <h2>
+//       {index + 1}. {item.facltNm}
+//     </h2>
+//     <p>{item.addr1}</p>
+//     <p>{item.tel}</p>
+//     <p>거리: {item.distance} km</p>
+//   </div>
+// );
 
 const CampSiteList = ({ data, handleMarkerClick }) => {
   return (

@@ -21,14 +21,13 @@ const SideBar = ({ position, onClick }) => {
   const isSideBarOpened = useCampsiteStore((state) => state.isSideBarOpened);
   const selectedSite = useCampsiteStore((state) => state.selectedSite);
   const [activeTab, setActiveTab] = useState(initialState);
-  console.log(selectedSite);
   const handleTapClick = (tap) => {
     setActiveTab(tap);
   };
   const { data, queryError } = useCampsitesQuery(position);
 
   const ActiveComponent = sideBarComponents[`SideBar${activeTab}`];
-  if (isSideBarOpened)
+  if (isSideBarOpened && !queryError)
     return (
       <Wrapper>
         {selectedSite && (
