@@ -13,3 +13,9 @@ export const DisPlayAddress = styled.div`
   z-index: 1000;
   padding: 10px;
 `;
+
+export const ResetBtn = styled.button`
+  right: 0;
+  position: absolute;
+  z-index: 9;
+`;
