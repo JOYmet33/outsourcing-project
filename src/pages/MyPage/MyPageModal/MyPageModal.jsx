@@ -14,6 +14,7 @@ import {
   ModalTextarea,
   ModalSubmitButton,
   ErrorMessage,
+  ModalImage,
 } from "../MyPageModal/MyPageModal.styled.jsx";
 
 const MyPageModal = ({ isOpen, closeModal, reviewId }) => {
@@ -21,6 +22,7 @@ const MyPageModal = ({ isOpen, closeModal, reviewId }) => {
   const [errors, setErrors] = useState({ content: "", image: "" });
   const [user, setUser] = useState(null);
   const [userReview, setUserReview] = useState("");
+  const [imgSrc, setImgSrc] = useState(""); // 이미지 미리보기
 
   useEffect(() => {
     const getUserReview = async () => {
@@ -36,6 +38,7 @@ const MyPageModal = ({ isOpen, closeModal, reviewId }) => {
       const review = userReview.find((review) => review.id === reviewId);
       if (review) {
         setFormData({ ...formData, content: review.content });
+        setImgSrc(review.image);
       }
     };
     if (isOpen) {
@@ -46,8 +49,20 @@ const MyPageModal = ({ isOpen, closeModal, reviewId }) => {
   // console.log(formData);
   if (!isOpen) return null;
 
+  // const handleChange = (e) => {
+  //   const { name, value, files } = e.target;
+  //   setFormData({
+  //     ...formData,
+  //     [name]: files ? files[0] : value,
+  //   });
+  // };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+    if (name === "image" && files) {
+      const file = files[0];
+      setImgSrc(URL.createObjectURL(file));
+    }
     setFormData({
       ...formData,
       [name]: files ? files[0] : value,
@@ -67,11 +82,11 @@ const MyPageModal = ({ isOpen, closeModal, reviewId }) => {
       return;
     }
 
-    const fileExt = image.name.split(".").pop();
-    const filePath = `${Date.now()}.${fileExt}`;
-
     let imageUrl = "";
     if (image) {
+      const fileExt = image.name.split(".").pop();
+      const filePath = `${Date.now()}.${fileExt}`;
+
       const { data, error } = await supabase.storage.from("camparoo").upload(`review/${filePath}`, image);
       if (error) {
         console.error("이미지 업로드 오류:", error);
@@ -99,6 +114,9 @@ const MyPageModal = ({ isOpen, closeModal, reviewId }) => {
           <ModalContent>
             <ContentInner>
               <ModalForm onSubmit={handleSubmit}>
+                <>이미지</>
+                <ModalImage src={imgSrc} />
+                <>리뷰</>
                 <ModalTextarea
                   placeholder="내용을 입력해주세요."
                   name="content"

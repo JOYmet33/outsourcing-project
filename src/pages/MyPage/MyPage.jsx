@@ -14,6 +14,8 @@ import {
   ReviewItem,
   ReviewsContainer,
   Section,
+  ReviewImage,
+  ReviewContent,
 } from "./MyPage.styled";
 import MyPageModal from "./MyPageModal/MyPageModal";
 
@@ -158,7 +160,8 @@ const Mypage = () => {
           <div>내가 쓴 글</div>
           {userReviews.map((review) => (
             <ReviewItem key={review.id}>
-              <div>{review.content}</div>
+              <ReviewImage src={review.image} alt="내가 쓴 리뷰 이미지" />
+              <ReviewContent>{review.content}</ReviewContent>
               <div>
                 <EditButton
                   onClick={() => {
@@ -168,7 +171,6 @@ const Mypage = () => {
                 >
                   수정
                 </EditButton>
-
                 <DeleteButton onClick={() => handleReviewDelete(review.id)}>삭제</DeleteButton>
               </div>
             </ReviewItem>

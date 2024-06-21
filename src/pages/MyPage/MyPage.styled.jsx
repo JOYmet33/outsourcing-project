@@ -66,9 +66,23 @@ export const ReviewItem = styled.div`
   margin-bottom: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
+  height: 100px;
   max-width: 700px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-top: 7px;
+`;
+
+export const ReviewImage = styled.img`
+  width: 90px;
+  height: 90px;
+`;
+export const ReviewContent = styled.div`
+  width: 400px;
+  height: 100px;
+  overflow: hidden;
+  max-height: 200px;
+  display: flex;
+  align-items: center;
 `;
