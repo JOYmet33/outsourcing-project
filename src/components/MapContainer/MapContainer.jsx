@@ -1,13 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
-import { Map, MapMarker, useKakaoLoader } from "react-kakao-maps-sdk";
-import useCampsiteStore from "../../store/campsiteStore";
+import { useEffect, useState } from "react";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
-import campsiteApi from "../../lib/api/campsite.api";
+import useCampsitesQuery from "../../hooks/useCampsitesQuery";
+import useCampsiteStore from "../../store/campsiteStore";
 import { DisPlayAddress, Popup, ResetBtn, Wrapper } from "./MapContainer.styled";
 import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
-import CampSiteList from "../SideBar/CampSiteList/CampSiteList";
-import useCampsitesQuery from "../../hooks/useCampsitesQuery";
 
 const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
 
@@ -103,13 +100,7 @@ const MapContainer = ({
   }, []);
 
   useEffect(() => {
-    if (!window.kakao || !window.kakao.maps) {
-      return;
-    }
-    handleReset();
-  }, [window.kakao]);
-
-  useEffect(() => {
+    if (!window.kakao || !window.kakao.maps) return;
     fetchAddress(viewPosition.lat, viewPosition.lng);
   }, [viewPosition]);
 
