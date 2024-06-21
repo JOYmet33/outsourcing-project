@@ -106,6 +106,11 @@ const MapContainer = forwardRef(
 
     useEffect(() => {
       if (!window.kakao || !window.kakao.maps) return;
+      handleReset();
+    }, [window.kakao]);
+
+    useEffect(() => {
+      if (!window.kakao || !window.kakao.maps) return;
       fetchAddress(viewPosition.lat, viewPosition.lng);
     }, [viewPosition]);
 
