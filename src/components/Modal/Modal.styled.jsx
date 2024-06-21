@@ -6,7 +6,7 @@ export const Container = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 1001;
 `;
 
 export const ModalContainer = styled.div`
@@ -40,7 +40,7 @@ export const ContentInner = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  padding: 40px 30px;
+  padding: 60px 30px 40px;
   width: 400px;
   border-radius: 6px;
   background-color: #fff;
@@ -48,10 +48,10 @@ export const ContentInner = styled.div`
 
 export const ButtonModalClose = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 10px;
+  right: 10px;
   padding: 12px;
-  color: #fff;
+  color: #000000;
   cursor: pointer;
   z-index: 100;
 `;
