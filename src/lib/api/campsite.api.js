@@ -10,19 +10,6 @@ class CampsiteAPI {
   constructor() {
     this.#client = axios.create({ baseURL: this.#baseURL });
   }
-  async getBasedList() {
-    const path = "/basedList";
-    const res = await this.#client.get(path, {
-      params: {
-        numOfRows: 100,
-        MobileOS: "ETC",
-        MobileApp: "AppTest",
-        serviceKey: API_KEY,
-        _type: "json",
-      },
-    });
-    return res.data;
-  }
 
   async getListWithLocation({ mapX, mapY }) {
     const path = "/locationBasedList";

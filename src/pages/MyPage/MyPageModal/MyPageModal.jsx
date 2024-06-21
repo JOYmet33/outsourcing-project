@@ -31,8 +31,7 @@ const MyPageModal = ({ isOpen, closeModal, reviewId }) => {
 
       const userReview = await getReviewByUserId(user.id);
       setUserReview(userReview);
-      // console.log(userReview);
-      //필터
+
       const review = userReview.find((review) => review.id === reviewId);
       if (review) {
         setFormData({ ...formData, content: review.content });
@@ -43,7 +42,6 @@ const MyPageModal = ({ isOpen, closeModal, reviewId }) => {
     }
   }, [isOpen, reviewId]);
 
-  // console.log(formData);
   if (!isOpen) return null;
 
   const handleChange = (e) => {
