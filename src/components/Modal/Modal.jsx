@@ -94,9 +94,9 @@ const Modal = ({ isOpen, closeModal ,campsiteId}) => {
   return (
     <Container>
       <ModalContainer>
-        <ButtonModalClose onClick={closeModal}>X</ButtonModalClose>
         <ModalContent>
           <ContentInner>
+            <ButtonModalClose onClick={closeModal}>X</ButtonModalClose>
             <ModalForm onSubmit={handleSubmit}>
               <ModalTextarea
                 placeholder="내용을 입력해주세요."
@@ -113,8 +113,8 @@ const Modal = ({ isOpen, closeModal ,campsiteId}) => {
             </ModalForm>
           </ContentInner>
         </ModalContent>
-        <ModalScreen onClick={closeModal} />
       </ModalContainer>
+      <ModalScreen onClick={closeModal} />
     </Container>
   );
 };
