@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { uploadImage } from "../../lib/api/upLoadImage.js";
 import supabase from "../../supabaseClient.js";
 import {
   ButtonModalClose,
@@ -13,9 +14,8 @@ import {
   ModalSubmitButton,
   ModalTextarea,
 } from "./Modal.styled.jsx";
-import { uploadImage } from "../../lib/api/upLoadImage.js";
 
-const Modal = ({ isOpen, closeModal ,campsiteId}) => {
+const Modal = ({ isOpen, closeModal, campsiteId }) => {
   const [content, setContent] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [error, setError] = useState("");
@@ -77,9 +77,7 @@ const Modal = ({ isOpen, closeModal ,campsiteId}) => {
       // nickname: userData.nickname,  // 사용자 닉네임 추가
     };
 
-    const { data, error: insertError } = await supabase
-      .from("review")
-      .insert(newReview);
+    const { data, error: insertError } = await supabase.from("review").insert(newReview);
 
     if (insertError) {
       console.error("리뷰 저장 오류:", insertError);
@@ -89,7 +87,6 @@ const Modal = ({ isOpen, closeModal ,campsiteId}) => {
 
     closeModal();
   };
-
 
   return (
     <Container>
@@ -104,11 +101,7 @@ const Modal = ({ isOpen, closeModal ,campsiteId}) => {
                 onChange={(e) => setContent(e.target.value)}
               />
               {error && <ErrorMessage>{error}</ErrorMessage>}
-              <ModalFileInput
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
+              <ModalFileInput type="file" accept="image/*" onChange={handleImageChange} />
               <ModalSubmitButton type="submit">등록하기</ModalSubmitButton>
             </ModalForm>
           </ContentInner>

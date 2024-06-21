@@ -1,13 +1,13 @@
 import { forwardRef, useEffect, useState } from "react";
+import { FaLocationCrosshairs } from "react-icons/fa6";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
-import useCampsiteStore from "../../store/campsiteStore";
 import campsiteMarker from "../../assets/img/marker_campsite.svg";
 import userPosition from "../../assets/img/user_position.svg";
-import { FaLocationCrosshairs } from "react-icons/fa6";
-import { DisPlayAddress, ResetBtn, Wrapper } from "./MapContainer.styled";
-import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
 import useCampsitesQuery from "../../hooks/useCampsitesQuery";
+import useCampsiteStore from "../../store/campsiteStore";
+import { DisPlayAddress, ResetBtn, Wrapper } from "./MapContainer.styled";
 import Popup from "./Popup/Popup";
+import SideBarToggleBtn from "./SideBarToggleBtn/SideBarToggleBtn";
 
 const seoulCityHallCoordinates = { lat: 37.5665, lng: 126.978 };
 
@@ -105,13 +105,12 @@ const MapContainer = forwardRef(
     };
 
     useEffect(() => {
-      if (!window.kakao || !window.kakao.maps) {
-        return;
-      }
+      if (!window.kakao || !window.kakao.maps) return;
       handleReset();
     }, [window.kakao]);
 
     useEffect(() => {
+      if (!window.kakao || !window.kakao.maps) return;
       fetchAddress(viewPosition.lat, viewPosition.lng);
     }, [viewPosition]);
 
