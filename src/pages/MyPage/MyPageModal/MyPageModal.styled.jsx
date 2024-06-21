@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+
 export const Container = styled.div`
   position: fixed;
   top: 0;
@@ -98,7 +99,7 @@ export const ModalFileInput = styled.input`
 
 export const ModalTextarea = styled.textarea`
   width: 100%;
-  height: 180px;
+  height: 100px;
   padding: 16px;
   border-radius: 8px;
   font-size: 12px;
@@ -107,6 +108,26 @@ export const ModalTextarea = styled.textarea`
   border: none;
   resize: unset;
 
+  &:focus {
+    outline: none;
+  }
+  &::placeholder {
+    color: #a9a9a9;
+  }
+`;
+
+export const ModalImage = styled.img`
+  width: 100%;
+  /* height: 300px; */
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  background-color: #efefef;
+  box-sizing: border-box;
+  border: none;
+  resize: unset;
+  object-fit: cover;
+  aspect-ratio: 1/1;
   &:focus {
     outline: none;
   }
