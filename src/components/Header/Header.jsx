@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../../store/userStore";
 import supabase from "../../supabaseClient";
 import { IconMyPage } from "../Icon/Icons/IconMyPage";
 import { Button, ButtonContainer, HeaderBar, HeaderLink, IconContainer, Img, LogoContainer } from "./Header.styled";
 import SearchContainer from "./SearchContainer/SearchContainer";
-import useUserStore from "../../store/userStore";
 
 const Header = () => {
-  const [userName, setUserName] = useState("");
-  const [userImage, setUserImage] = useState("");
   const navigate = useNavigate();
-  const { isSignIn, setSignIn, setSignOut } = useUserStore((state) => state);
+  const { isSignIn, setSignIn, setSignOut, userName, userImage, setUserName, setUserImage } = useUserStore(
+    (state) => state,
+  );
 
   useEffect(() => {
     const checkSignIn = async () => {
@@ -25,24 +25,23 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
+    const checkLogin = async () => {
+      const session = await supabase.auth.getSession();
+      const user = session.data.session?.user;
+
+      if (user) {
+        const { data, error } = await supabase.from("users").select("image, nickname").eq("id", user.id).single();
+
+        if (error) {
+          console.error("Error fetching user info:", error);
+        } else {
+          setUserImage(data.image);
+          setUserName(data.nickname);
+        }
+      }
+    };
     checkLogin();
   }, []);
-
-  const checkLogin = async () => {
-    const session = await supabase.auth.getSession();
-    const user = session.data.session?.user;
-
-    if (user) {
-      const { data, error } = await supabase.from("users").select("image, nickname").eq("id", user.id).single();
-
-      if (error) {
-        console.error("Error fetching user info:", error);
-      } else {
-        setUserImage(data.image);
-        setUserName(data.nickname);
-      }
-    }
-  };
 
   const handleSignIn = () => {
     navigate("/sign_in");

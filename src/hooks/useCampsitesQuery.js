@@ -2,8 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import useCampsiteStore from "../store/campsiteStore";
 import campsiteApi from "../lib/api/campsite.api";
 import { haversineDistance } from "../utils/distance";
+import { useEffect } from "react";
 
 const useCampsitesQuery = (position) => {
+  const openSideBar = useCampsiteStore((state) => state.openSideBar);
+
   const keyword = useCampsiteStore((state) => state.keyword);
   const { data, error: queryError } = useQuery({
     queryKey: ["campingSites", { keyword, position }],
@@ -30,8 +33,14 @@ const useCampsitesQuery = (position) => {
         return [];
       }
     },
+
     enabled: !!position.lat && !!position.lng,
   });
+
+  useEffect(() => {
+    data && keyword && openSideBar();
+  }, [data]);
+
   return { data, queryError };
 };
 
