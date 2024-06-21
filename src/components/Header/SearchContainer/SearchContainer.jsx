@@ -5,6 +5,7 @@ import useCampsiteStore from "../../../store/campsiteStore";
 const SearchContainer = () => {
   const [text, setText] = useState("");
   const setKeyword = useCampsiteStore((state) => state.setKeyword);
+
   const handleChange = (e) => setText(e.target.value);
   const handleSearch = (e) => {
     e.preventDefault();
