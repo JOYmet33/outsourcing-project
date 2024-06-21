@@ -16,5 +16,3 @@ const SideBarHome = ({ selectedSite }) => {
 };
 
 export default SideBarHome;
-
-//
